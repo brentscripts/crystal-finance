@@ -1,0 +1,55 @@
+#############################
+# PowerShell Project
+#############################
+
+# PowerShell generated files
+*.ps1.temp
+*.ps1.tmp
+*.ps1_backup
+
+# Local config + credentials
+*.env
+config.json
+secrets.json
+
+#############################
+# CSV Data Files
+#############################
+
+# Raw data files should not be committed
+data/
+*.csv
+
+#############################
+# Logs
+#############################
+
+*.log
+logs/
+docker-logs/
+
+#############################
+# Docker
+#############################
+
+# Avoid committing Docker runtime artifacts
+*.pid
+*.pid.lock
+
+#############################
+# OS Specific
+#############################
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+#############################
+# VSCode
+#############################
+
+.vscode/
+.code-workspace
