@@ -24,6 +24,16 @@
     - ``mysql -h 127.0.0.1 -u $env:MYSQL_USER -p``
   - When prompted, enter the password from `$env:MYSQL_PASSWORD`.
 
+**.env sample**
+Create a simple `.env` file in the repo root (used by `docker compose`) or export these as env vars before running scripts:
+```
+HOST_PORT=3306
+MYSQL_ROOT_PASSWORD=your_password
+MYSQL_DATABASE=finance
+MYSQL_USER=root
+MYSQL_PASSWORD=your_password
+```
+
 **Load data using import-transactions.ps1**
 - **Set environment variables for the script** (PowerShell):
   - ``$env:HOST_PORT = "3306"``
@@ -52,6 +62,20 @@ VALUES ('2025-05-05','CPP*ORYA','Entertainment',-100.00,'Chase','Sale','',NULL);
 ```
 - Paste multiple line insert statements as `Single line` in VSCode.
 
+**Manual CRUD (VS Code or MySQL Workbench)**
+- You can perform manual `SELECT`, `INSERT`, `UPDATE`, and `DELETE` operations using either:
+  - **VS Code** with a MySQL extension (e.g., "MySQL" or "SQLTools") — open a connection to `127.0.0.1:$env:HOST_PORT` and run queries from the editor.
+  - **MySQL Workbench** — connect to `127.0.0.1` on `HOST_PORT` and use the SQL Editor for ad-hoc CRUD.
+
+**Power BI (front end)**
+- Power BI Desktop is used as the reporting/visualization UI for this project. To connect Power BI to the MySQL `finance` database:
+  - Install the MySQL ODBC driver or ConnectorNET as required by Power BI.
+  - In Power BI Desktop: `Get Data` -> `MySQL database` and enter `127.0.0.1` and the host port (`HOST_PORT`) plus database `finance` and your credentials.
+
+**Notes & safety**
+- Test manual or bulk imports inside a transaction so you can `ROLLBACK` if something looks wrong:
+  - ``START TRANSACTION;`` then run your `INSERT`/`LOAD DATA` commands, then ``ROLLBACK;`` to undo or ``COMMIT;`` to make permanent.
+- The `find-duplicate-entries.ps1` script writes `data/duplicate-entries.csv` and will overwrite it by default; back it up if you need to preserve earlier outputs.
 
 ---
 File locations referenced:
