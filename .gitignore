@@ -52,4 +52,5 @@ Desktop.ini
 #############################
 
 .vscode/
-.code-workspace
+.code-workspace.vs/
+.vs/
