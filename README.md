@@ -10,7 +10,7 @@ The application uses a SQL database to store transaction data imported from vari
 *   CRUD (Create, Read, Update, Delete) operations for single transactions.
 *   Mass uploading transactions via CSV files.
 *   Analyzing transaction data using Power BI.
-*   
+  
 ---
 
 ## 🏗️ Phase 1: Initial Architecture
@@ -114,8 +114,7 @@ VALUES ('2025-05-05','CPP*ORYA','Entertainment',-100.00,'Chase','Sale','',NULL);
 - Test manual or bulk imports inside a transaction so you can `ROLLBACK` if something looks wrong:
   - ``START TRANSACTION;`` then run your `INSERT`/`LOAD DATA` commands, then ``ROLLBACK;`` to undo or ``COMMIT;`` to make permanent.
 - The `find-duplicate-entries.ps1` script writes `data/duplicate-entries.csv` and will overwrite it by default; back it up if you need to preserve earlier outputs.
-
----
+  
 File locations referenced:
 - `./powershell/import-transactions.ps1`
 - `./powershell/find-duplicate-entries.ps1`
