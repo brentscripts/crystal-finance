@@ -10,6 +10,8 @@ The application uses a SQL database to store transaction data imported from vari
 *   CRUD (Create, Read, Update, Delete) operations for single transactions.
 *   Mass uploading transactions via CSV files.
 *   Analyzing transaction data using Power BI.
+*   
+---
 
 ## 🏗️ Phase 1: Initial Architecture
 
@@ -32,8 +34,9 @@ The next phase of development will introduce a more robust user experience and a
 
 While some of the chosen architecture might seem robust for a small personal application, the primary objective is to **gain .NET Full-Stack developer experience** using this specific stack and set of tools. This project serves as a comprehensive learning platform.
 
+---
 
-**Initial Architecture— README**
+## Initial Architecture (**README**)
 
 - **Purpose**: Quick reference for starting MySQL (Docker), logging in, loading CSV data with `import-transactions.ps1`, checking duplicates with `find-duplicate-entries.ps1`, and manually inserting specific rows into the `transactions` table.
 
@@ -119,6 +122,7 @@ File locations referenced:
 - `./data/duplicate-entries.csv`
 - `./mysql/init.sql`
 
+---
 
 ## 🏗️ Phase 2: Planned Architecture & Cloud Deployment
 
