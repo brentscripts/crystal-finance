@@ -1,4 +1,42 @@
-**Crystal Finance — README**
+# Crystal-Finance Application Documentation
+
+## Project Overview
+
+This project is a simple and efficient application designed to manage personal finances, focusing primarily on cash flow monitoring (total expenses vs. total income). A core functional requirement is the ability to calculate tithing on income.
+
+The application uses a SQL database to store transaction data imported from various bank and credit card CSV statements. Key functionalities include:
+
+*   Reading and parsing diverse CSV files into a standardized `Transaction` format.
+*   CRUD (Create, Read, Update, Delete) operations for single transactions.
+*   Mass uploading transactions via CSV files.
+*   Analyzing transaction data using Power BI.
+  
+---
+
+## 🏗️ Phase 1: Initial Architecture
+
+The initial design focuses on leveraging existing tools and simple scripts for core functionality:
+
+*   **CSV Processing & Database Writing:** Performed using Powershell scripts.
+*   **Database Management:** Data is stored in a MySQL database.
+*   **CRUD Operations:** Managed via VS Code or MySQL Workbench.
+*   **Deployment:** The entire application is deployed locally within a Docker container.
+
+## Next Iteration & Future Enhancements
+
+The next phase of development will introduce a more robust user experience and a cloud-based deployment strategy:
+
+*   **User Interface:** A Blazor UI layer will be added for user-friendly CRUD operations.
+*   **API Layer:** A Web API will manage the interaction between the UI and the database.
+*   **Deployment Strategy:** Implementation of DevOps practices to deploy the Docker container to Azure.
+
+## Technical Goals
+
+While some of the chosen architecture might seem robust for a small personal application, the primary objective is to **gain .NET Full-Stack developer experience** using this specific stack and set of tools. This project serves as a comprehensive learning platform.
+
+---
+
+## Initial Architecture (**README**)
 
 - **Purpose**: Quick reference for starting MySQL (Docker), logging in, loading CSV data with `import-transactions.ps1`, checking duplicates with `find-duplicate-entries.ps1`, and manually inserting specific rows into the `transactions` table.
 
@@ -27,7 +65,7 @@
 **.env sample**
 Create a simple `.env` file in the repo root (used by `docker compose`) or export these as env vars before running scripts:
 ```
-HOST_PORT=3306
+HOST_PORT=3307
 MYSQL_ROOT_PASSWORD=your_password
 MYSQL_DATABASE=finance
 MYSQL_USER=root
@@ -76,10 +114,53 @@ VALUES ('2025-05-05','CPP*ORYA','Entertainment',-100.00,'Chase','Sale','',NULL);
 - Test manual or bulk imports inside a transaction so you can `ROLLBACK` if something looks wrong:
   - ``START TRANSACTION;`` then run your `INSERT`/`LOAD DATA` commands, then ``ROLLBACK;`` to undo or ``COMMIT;`` to make permanent.
 - The `find-duplicate-entries.ps1` script writes `data/duplicate-entries.csv` and will overwrite it by default; back it up if you need to preserve earlier outputs.
-
----
+  
 File locations referenced:
 - `./powershell/import-transactions.ps1`
 - `./powershell/find-duplicate-entries.ps1`
 - `./data/duplicate-entries.csv`
 - `./mysql/init.sql`
+
+---
+
+## 🏗️ Phase 2: Planned Architecture & Cloud Deployment
+
+The next phase of the project transitions from local scripts to full-stack applications. The architecture is designed to provide robust user interfaces while gaining valuable cloud-native experience.
+
+### 1. The Blazor User Interface (UI)
+
+The primary web frontend will be developed using **Blazor UI**, specifically Blazor WebAssembly or Blazor Server.
+
+*   **Purpose**: Provides a user-friendly web interface to replace manual interactions in MySQL Workbench or the CLI.
+*   **Functionality**: Allows for robust CRUD operations on transactions, configuration management, and viewing reports.
+
+### 2. Alternative: WPF Desktop UI
+
+As an alternative or parallel development track, a Windows Presentation Foundation (**WPF**) application is planned.
+
+*   **Purpose**: Provides a rich, native desktop experience for Windows users who prefer a local application interface over a web browser UI.
+*   **Functionality**: This desktop application will interact with the same Web API layer to perform all necessary finance management operations.
+*   **Goal**: This track helps maximize **.NET Full-Stack** experience by covering both web and desktop application development paradigms.
+
+### 3. The Web API Layer (C# .NET)
+
+A new C# **Web API** project will act as the intermediary between both the Blazor UI and the WPF desktop application and the MySQL database.
+
+*   **Purpose**: Decouples the frontend from the data layer, enhances security, and centralizes business logic (like tithing calculations and data validation).
+*   **Technology**: Built with .NET and potentially using Entity Framework Core for data access to MySQL.
+
+### 4. Azure DevOps & CI/CD Pipelines
+
+**Azure DevOps** will manage the Continuous Integration (CI) and Continuous Deployment (CD) processes for all C# projects.
+
+*   **Azure Repos**: The source of truth for all code (C#, Blazor, WPF, HTML/CSS).
+*   **Azure Pipelines**:
+    *   **CI Pipeline**: Automatically builds all application projects (Console, API, Blazor, WPF) whenever code is pushed.
+    *   **CD Pipeline**: Pushes built artifacts or Docker images to Azure hosting services after successful builds.
+
+### 5. Azure Cloud Deployment Strategy
+
+The application components will be deployed as a containerized solution to Microsoft Azure.
+
+*   **Containerization**: The Web API layer will run inside **Docker containers**. (WPF applications are deployed as native Windows executables).
+*   **Azure Hosting**: We will use Azure services (likely Azure Container Instances or Azure App Service) to host the containers.
