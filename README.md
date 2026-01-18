@@ -36,7 +36,7 @@ MYSQL_PASSWORD=your_password
 
 **Load data using import-transactions.ps1**
 - **Set environment variables for the script** (PowerShell):
-  - ``$env:HOST_PORT = "3306"``
+  - ``$env:HOST_PORT = "3307"``
   - ``$env:MYSQL_USER = "root"``
   - ``$env:MYSQL_PASSWORD = "your_password"``
   - ``$env:MYSQL_DATABASE = "finance"``

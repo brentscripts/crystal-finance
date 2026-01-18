@@ -11,6 +11,9 @@
 *.env
 config.json
 secrets.json
+# Ignore appsettings files with secrets
+appsettings.*.json
+appsettings.json
 
 #############################
 # CSV Data Files

@@ -9,20 +9,79 @@ param(
     [string]$Source = ""  # Optional: Bank or Chase. If empty, script tries to detect
 )
 
-# Load MySQL .NET connectorC:\Program Files (x86)\MySQL\Connector NET 8.0\Assemblies\v4.5.2\MySql.Data.dll
-Add-Type -Path "C:\Program Files (x86)\MySQL\MySQL Installer for Windows\MySql.Data.dll"
+# Load MySQL .NET connector - try known locations then search Program Files
+$dllCandidates = @(
+    "C:\\Program Files (x86)\\MySQL\\MySQL Installer for Windows\\MySql.Data.dll",
+    "C:\\Program Files (x86)\\MySQL\\Connector NET 8.0\\Assemblies\\v4.5.2\\MySql.Data.dll",
+    "C:\\Program Files\\MySQL\\Connector NET 8.0\\Assemblies\\v4.5.2\\MySql.Data.dll"
+)
+$dllPath = $dllCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+if (-not $dllPath) {
+    Write-Host "MySql.Data.dll not found in common locations; searching 'Program Files'..."
+    $found = Get-ChildItem 'C:\\Program Files*' -Recurse -ErrorAction SilentlyContinue -Filter MySql.Data.dll | Select-Object -First 1
+    if ($found) { $dllPath = $found.FullName }
+}
+if (-not $dllPath) {
+    Write-Error "MySql.Data.dll not found. Install Connector/NET or update the script with the correct path."
+    exit 1
+}
+try {
+    Add-Type -Path $dllPath
+    Write-Host "Loaded MySQL assembly from: $dllPath"
+}
+catch {
+    Write-Error "Failed to load MySql.Data.dll from $($dllPath): $($_.Exception.Message)"
+    exit 1
+}
 
-# Database credentials from environment variables
+# Load environment variables from .env
+$envFile = Join-Path (Split-Path $PSScriptRoot -Parent) ".env"
+
+if (-not (Test-Path $envFile)) {
+    Write-Error ".env file not found at $envFile"
+    exit 1
+}
+
+Get-Content $envFile | ForEach-Object {
+    if ($_ -match '^\s*(#|$)') { return }
+    $name, $value = $_ -split '=', 2
+    [Environment]::SetEnvironmentVariable($name.Trim(), $value.Trim(), "Process")
+}
+
+Write-Host ".env loaded successfully"
+
+# Database credentials from environment variables (logged for diagnostics - avoid secrets in shared logs)
 $server   = "127.0.0.1"
 $port     = $env:HOST_PORT
 $user     = $env:MYSQL_USER
 $password = $env:MYSQL_PASSWORD
 $database = $env:MYSQL_DATABASE
+Write-Host "DB env: HOST_PORT=$env:HOST_PORT; MYSQL_USER=$env:MYSQL_USER; MYSQL_DATABASE=$env:MYSQL_DATABASE"
+
+# Prompt for password if not provided via environment variable
+if ([string]::IsNullOrEmpty($password)) {
+    Write-Host "MYSQL_PASSWORD not set; prompting for password (input hidden)..."
+    try {
+        $securePwd = Read-Host -AsSecureString "MySQL password"
+        $password = (New-Object System.Net.NetworkCredential('', $securePwd)).Password
+    }
+    catch {
+        Write-Error "Failed to read secure password: $($_.Exception.Message)"
+        exit 1
+    }
+}
 
 $connectionString = "server=$server;port=$port;user=$user;password=$password;database=$database;"
 
 $connection = New-Object MySql.Data.MySqlClient.MySqlConnection($connectionString)
-$connection.Open()
+try {
+    $connection.Open()
+    Write-Host "Connection opened. State: $($connection.State)"
+}
+catch {
+    Write-Error "Failed to open DB connection: $($_.Exception.Message)"
+    exit 1
+}
 
 # Import CSV
 if (-Not (Test-Path $CsvPath)) {
@@ -101,6 +160,17 @@ VALUES
             $cmd.Parameters.AddWithValue("@balance", $null)
         }
 
+        if ($connection.State -ne 'Open') {
+            Write-Warning "Connection not open before ExecuteNonQuery — attempting reconnect."
+            try {
+                $connection.Open()
+                Write-Host "Reconnected. State: $($connection.State)"
+            }
+            catch {
+                Write-Error "Reconnect failed: $($_.Exception.Message)"
+                break
+            }
+        }
         $rowsAffected = $cmd.ExecuteNonQuery()
         if ($rowsAffected -eq 0) {
             $skipCount++
