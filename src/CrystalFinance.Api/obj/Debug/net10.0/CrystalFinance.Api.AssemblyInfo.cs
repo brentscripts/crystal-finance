@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CrystalFinance.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c7ce478b9a90e33288dcd160007f0e245e31c30")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4b7eb4516a6060477edd2b4dc60e4b5c1e7c7a71")]
 [assembly: System.Reflection.AssemblyProductAttribute("CrystalFinance.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CrystalFinance.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 
 namespace CrystalFinance.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Policy = "API.UserAccess")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries =
@@ -11,6 +14,7 @@ namespace CrystalFinance.Api.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         ];
 
+        [RequiredScope("API.UserAccess")]
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
