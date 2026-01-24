@@ -1,166 +1,182 @@
-# Crystal-Finance Application Documentation
+# Crystal-Finance
 
-## Project Overview
+## Overview
+Crystal-Finance is a personal finance application focused on **cash flow tracking** (income vs. expenses) with built-in **tithing calculations**. Transaction data is imported from bank and credit card CSV files into a MySQL database and analyzed using Power BI.
 
-This project is a simple and efficient application designed to manage personal finances, focusing primarily on cash flow monitoring (total expenses vs. total income). A core functional requirement is the ability to calculate tithing on income.
-
-The application uses a SQL database to store transaction data imported from various bank and credit card CSV statements. Key functionalities include:
-
-*   Reading and parsing diverse CSV files into a standardized `Transaction` format.
-*   CRUD (Create, Read, Update, Delete) operations for single transactions.
-*   Mass uploading transactions via CSV files.
-*   Analyzing transaction data using Power BI.
-  
----
-
-## 🏗️ Phase 1: Initial Architecture
-
-The initial design focuses on leveraging existing tools and simple scripts for core functionality:
-
-*   **CSV Processing & Database Writing:** Performed using Powershell scripts.
-*   **Database Management:** Data is stored in a MySQL database.
-*   **CRUD Operations:** Managed via VS Code or MySQL Workbench.
-*   **Deployment:** The entire application is deployed locally within a Docker container.
-
-## Next Iteration & Future Enhancements
-
-The next phase of development will introduce a more robust user experience and a cloud-based deployment strategy:
-
-*   **User Interface:** A Blazor UI layer will be added for user-friendly CRUD operations.
-*   **API Layer:** A Web API will manage the interaction between the UI and the database.
-*   **Deployment Strategy:** Implementation of DevOps practices to deploy the Docker container to Azure.
-
-## Technical Goals
-
-While some of the chosen architecture might seem robust for a small personal application, the primary objective is to **gain .NET Full-Stack developer experience** using this specific stack and set of tools. This project serves as a comprehensive learning platform.
+The project intentionally uses a robust stack to gain hands-on **.NET full-stack** and **cloud-ready** experience while solving a real, personal use case.
 
 ---
 
-## Initial Architecture (**README**)
-
-- **Purpose**: Quick reference for starting MySQL (Docker), logging in, loading CSV data with `import-transactions.ps1`, checking duplicates with `find-duplicate-entries.ps1`, and manually inserting specific rows into the `transactions` table.
-
-**Prerequisites**
-- **Docker / Docker Compose**: Installed and running.
-- **PowerShell**: Recommended on Windows (scripts live in `./powershell`).
-- **MySQL client or Workbench**: For manual SQL entry.
-- **MySQL .NET Connector**: Required by `import-transactions.ps1` if you run it from Windows PowerShell. The script currently references a connector DLL path — install the connector and update the path in `powershell/import-transactions.ps1` if needed.
-
-**Start MySQL (Docker)**
-- **Command**: From the repo root run:
-  - `docker compose up -d`
-- **Notes**: The `docker-compose.yml` exposes MySQL on host port `${HOST_PORT}` (set in your environment or `.env`). By default the container's MySQL listens on container port `3306`.
-
-**Login to MySQL (host machine)**
-- **Using mysql CLI** (PowerShell example):
-  - Set environment values or use your values directly:
-    - ``$env:HOST_PORT="3306"``
-    - ``$env:MYSQL_USER="root"``
-    - ``$env:MYSQL_PASSWORD="your_password"``
-    - ``$env:MYSQL_DATABASE="finance"``
-  - Connect:
-    - ``mysql -h 127.0.0.1 -u $env:MYSQL_USER -p``
-  - When prompted, enter the password from `$env:MYSQL_PASSWORD`.
-
-**.env sample**
-Create a simple `.env` file in the repo root (used by `docker compose`) or export these as env vars before running scripts:
-```
-HOST_PORT=3307
-MYSQL_ROOT_PASSWORD=your_password
-MYSQL_DATABASE=finance
-MYSQL_USER=root
-MYSQL_PASSWORD=your_password
-```
-
-**Load data using import-transactions.ps1**
-- **Set environment variables for the script** (PowerShell):
-  - ``$env:HOST_PORT = "3307"``
-  - ``$env:MYSQL_USER = "root"``
-  - ``$env:MYSQL_PASSWORD = "your_password"``
-  - ``$env:MYSQL_DATABASE = "finance"``
-- **Run the import script** (example importing `chase.csv`):
-  - ``.\powershell\import-transactions.ps1 -CsvPath ".\data\chase.csv" -Source Chase``
-- **What it does**: The script parses the CSV, converts fields, and inserts rows using `INSERT IGNORE` to prevent inserting rows that already exist (i.e., it will skip duplicates).
-
-**Check for duplicates using find-duplicate-entries.ps1**
-- **Run the duplicate finder** (defaults to `data/chase.csv` and `data/bank.csv` if no paths given):
-  - ``.\powershell\find-duplicate-entries.ps1``
-  - Or scan a single file: ``.\powershell\find-duplicate-entries.ps1 -CsvPaths .\data\chase.csv``
-- **Output**: Writes `data/duplicate-entries.csv` containing duplicate groups with `DuplicateGroupId` and `DuplicateIndex` to help review.
-
-**Manually insert specific entries into MySQL**
-- **Open a SQL session** (mysql CLI or Workbench) and switch to the `finance` database:
-  - ``USE finance;``
-- **Example INSERT statements** (these map columns to the `transactions` table defined in `mysql/init.sql`). Replace values or run inside a transaction for testing.
-
--- CPP*ORYA (three duplicate rows)
-```
-INSERT IGNORE INTO transactions (trx_date, description, category, amount, source, transaction_type, memo, balance)
-VALUES ('2025-05-05','CPP*ORYA','Entertainment',-100.00,'Chase','Sale','',NULL);
-```
-- Paste multiple line insert statements as `Single line` in VSCode.
-
-**Manual CRUD (VS Code or MySQL Workbench)**
-- You can perform manual `SELECT`, `INSERT`, `UPDATE`, and `DELETE` operations using either:
-  - **VS Code** with a MySQL extension (e.g., "MySQL" or "SQLTools") — open a connection to `127.0.0.1:$env:HOST_PORT` and run queries from the editor.
-  - **MySQL Workbench** — connect to `127.0.0.1` on `HOST_PORT` and use the SQL Editor for ad-hoc CRUD.
-
-**Power BI (front end)**
-- Power BI Desktop is used as the reporting/visualization UI for this project. To connect Power BI to the MySQL `finance` database:
-  - Install the MySQL ODBC driver or ConnectorNET as required by Power BI.
-  - In Power BI Desktop: `Get Data` -> `MySQL database` and enter `127.0.0.1` and the host port (`HOST_PORT`) plus database `finance` and your credentials.
-
-**Notes & safety**
-- Test manual or bulk imports inside a transaction so you can `ROLLBACK` if something looks wrong:
-  - ``START TRANSACTION;`` then run your `INSERT`/`LOAD DATA` commands, then ``ROLLBACK;`` to undo or ``COMMIT;`` to make permanent.
-- The `find-duplicate-entries.ps1` script writes `data/duplicate-entries.csv` and will overwrite it by default; back it up if you need to preserve earlier outputs.
-  
-File locations referenced:
-- `./powershell/import-transactions.ps1`
-- `./powershell/find-duplicate-entries.ps1`
-- `./data/duplicate-entries.csv`
-- `./mysql/init.sql`
+## Architecture (Current – Phase 1)
+- **Data ingestion**: PowerShell scripts for CSV parsing and normalization
+- **Database**: MySQL running in Docker
+- **CRUD access**: MySQL CLI, VS Code, or MySQL Workbench
+- **Reporting**: Power BI Desktop
+- **Deployment**: Local Docker Compose only
 
 ---
 
-## 🏗️ Phase 2: Planned Architecture & Cloud Deployment
+## Quick Start
+Minimal steps to get running locally.
 
-The next phase of the project transitions from local scripts to full-stack applications. The architecture is designed to provide robust user interfaces while gaining valuable cloud-native experience.
+1. Start MySQL:
+   ```bash
+   docker compose up -d
+   ```
 
-### 1. The Blazor User Interface (UI)
+2. Create a `.env` file in the repo root:
+   ```env
+   HOST_PORT=3307
+   MYSQL_ROOT_PASSWORD=your_password
+   MYSQL_DATABASE=finance
+   MYSQL_USER=root
+   MYSQL_PASSWORD=your_password
+   ```
 
-The primary web frontend will be developed using **Blazor UI**, specifically Blazor WebAssembly or Blazor Server.
+3. Import a CSV file:
+   ```powershell
+   .\powershell\import-transactions.ps1 -CsvPath .\data\chase.csv -Source Chase
+   ```
 
-*   **Purpose**: Provides a user-friendly web interface to replace manual interactions in MySQL Workbench or the CLI.
-*   **Functionality**: Allows for robust CRUD operations on transactions, configuration management, and viewing reports.
+4. Open Power BI and connect to MySQL (`finance` database on `HOST_PORT`).
 
-### 2. Alternative: WPF Desktop UI
+---
 
-As an alternative or parallel development track, a Windows Presentation Foundation (**WPF**) application is planned.
+## Detailed Usage
 
-*   **Purpose**: Provides a rich, native desktop experience for Windows users who prefer a local application interface over a web browser UI.
-*   **Functionality**: This desktop application will interact with the same Web API layer to perform all necessary finance management operations.
-*   **Goal**: This track helps maximize **.NET Full-Stack** experience by covering both web and desktop application development paradigms.
+### Prerequisites
+- Docker & Docker Compose
+- PowerShell (Windows recommended)
+- MySQL CLI or MySQL Workbench
+- MySQL .NET Connector (required by `import-transactions.ps1`)
 
-### 3. The Web API Layer (C# .NET)
+---
 
-A new C# **Web API** project will act as the intermediary between both the Blazor UI and the WPF desktop application and the MySQL database.
+### Database Access
 
-*   **Purpose**: Decouples the frontend from the data layer, enhances security, and centralizes business logic (like tithing calculations and data validation).
-*   **Technology**: Built with .NET and potentially using Entity Framework Core for data access to MySQL.
+#### Option 1 — From Host (MySQL CLI)
+Use this when MySQL is exposed via Docker ports.
 
-### 4. Azure DevOps & CI/CD Pipelines
+```powershell
+mysql -h 127.0.0.1 -P 3307 -u root -p
+```
 
-**Azure DevOps** will manage the Continuous Integration (CI) and Continuous Deployment (CD) processes for all C# projects.
+- `-P` specifies the port
+- `-p` prompts for password
+- Do **not** pass passwords inline
 
-*   **Azure Repos**: The source of truth for all code (C#, Blazor, WPF, HTML/CSS).
-*   **Azure Pipelines**:
-    *   **CI Pipeline**: Automatically builds all application projects (Console, API, Blazor, WPF) whenever code is pushed.
-    *   **CD Pipeline**: Pushes built artifacts or Docker images to Azure hosting services after successful builds.
+#### Option 2 — Inside Docker Container
+Use this when MySQL is *not* exposed to the host.
 
-### 5. Azure Cloud Deployment Strategy
+```bash
+docker ps
+docker exec -it <container_name> mysql -u root -p
+```
 
-The application components will be deployed as a containerized solution to Microsoft Azure.
+---
 
-*   **Containerization**: The Web API layer will run inside **Docker containers**. (WPF applications are deployed as native Windows executables).
-*   **Azure Hosting**: We will use Azure services (likely Azure Container Instances or Azure App Service) to host the containers.
+### Basic MySQL CLI commands for navigating databases and inspecting schema.
+
+#### Databases
+List databases:
+```sql
+SHOW DATABASES;
+```
+
+Select a database:
+```sql
+USE finance;
+```
+
+Show current database:
+```sql
+SELECT DATABASE();
+```
+
+---
+
+#### Tables
+List tables in the current database:
+```sql
+SHOW TABLES;
+```
+
+Describe table columns:
+```sql
+DESCRIBE transactions;
+```
+### Import Transactions
+Set environment variables (PowerShell):
+
+```powershell
+$env:HOST_PORT="3307"
+$env:MYSQL_USER="root"
+$env:MYSQL_PASSWORD="your_password"
+$env:MYSQL_DATABASE="finance"
+```
+
+Run the import:
+```powershell
+.\powershell\import-transactions.ps1 -CsvPath .\data\chase.csv -Source Chase
+```
+
+- CSV files are normalized into the `transactions` table
+- Uses `INSERT IGNORE` to prevent duplicate rows
+
+---
+
+### Find Duplicate Entries
+```powershell
+.\powershell\find-duplicate-entries.ps1
+```
+
+- Outputs `data/duplicate-entries.csv`
+- Supports scanning one or multiple CSV files
+
+---
+
+### Manual SQL / CRUD
+```sql
+USE finance;
+
+INSERT IGNORE INTO transactions
+(trx_date, description, category, amount, source, transaction_type, memo, balance)
+VALUES
+('2025-05-05','CPP*ORYA','Entertainment',-100.00,'Chase','Sale','',NULL);
+```
+
+Manual CRUD can be performed using:
+- VS Code (SQLTools / MySQL extensions)
+- MySQL Workbench
+
+---
+
+### Power BI
+1. Install MySQL ODBC Driver or Connector/NET
+2. Power BI Desktop → **Get Data** → **MySQL database**
+3. Host: `127.0.0.1`
+4. Port: `HOST_PORT`
+5. Database: `finance`
+
+---
+
+## Notes, Gotchas & Decisions
+- Host-based MySQL access requires exposed Docker ports
+- Passwords should never be passed inline in CLI commands
+- `import-transactions.ps1` depends on a locally installed MySQL .NET Connector DLL
+- `duplicate-entries.csv` is overwritten on each run
+- Test imports inside transactions when validating data:
+  ```sql
+  START TRANSACTION;
+  -- run inserts
+  ROLLBACK; -- or COMMIT
+  ```
+
+---
+
+## Roadmap / Future
+- Blazor UI for web-based CRUD and configuration
+- Optional WPF desktop client
+- .NET Web API to centralize business logic
+- Azure DevOps CI/CD pipelines
+- Azure-hosted, containerized deployment
