@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CrystalFinance.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy = "API.UserAccess")]
 public class CrystalFinanceController : ControllerBase
 {
     // GET: api/<CrystalFinanceController>

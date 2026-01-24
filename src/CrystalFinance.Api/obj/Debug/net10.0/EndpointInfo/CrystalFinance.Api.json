@@ -195,6 +195,42 @@
         }
       }
     },
+    "/api/Transactions/import": {
+      "post": {
+        "tags": [
+          "Transactions"
+        ],
+        "parameters": [
+          {
+            "name": "source",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "$ref": "#/components/schemas/IFormFile"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/WeatherForecast": {
       "get": {
         "tags": [
@@ -237,6 +273,10 @@
   },
   "components": {
     "schemas": {
+      "IFormFile": {
+        "type": "string",
+        "format": "binary"
+      },
       "WeatherForecast": {
         "type": "object",
         "properties": {
@@ -273,6 +313,9 @@
   "tags": [
     {
       "name": "CrystalFinance"
+    },
+    {
+      "name": "Transactions"
     },
     {
       "name": "WeatherForecast"

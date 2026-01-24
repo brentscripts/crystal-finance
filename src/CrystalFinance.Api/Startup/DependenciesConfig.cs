@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using CrystalFinanceLibrary.Logic;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 
 namespace CrystalFinance.Api.Startup;
@@ -11,6 +12,6 @@ public static class DependenciesConfig
 
         builder.Services.AddOpenApiServices();
 
-        builder.Services.AddAuthorization();
+        builder.Services.AddAuthorization();       
     }
 }
