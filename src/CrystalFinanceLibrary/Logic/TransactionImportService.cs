@@ -15,12 +15,15 @@ public class TransactionImportService
     public async IAsyncEnumerable<TransactionModel> ImportTransactions(Stream fileStream, string source)
     {
         using var streamReader = new StreamReader(fileStream);
-        using var csv = new CsvReader(streamReader, new CsvConfiguration(CultureInfo.InvariantCulture)
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-            HasHeaderRecord = true,
+            PrepareHeaderForMatch = args => args.Header.Trim(),
+            TrimOptions = TrimOptions.Trim,
             MissingFieldFound = null,
             HeaderValidated = null
-        });
+        };
+        using var csv = new CsvReader(streamReader, config);
+
         csv.Context.RegisterClassMap<TransactionMap>();
 
         await foreach (var record in csv.GetRecordsAsync<TransactionModel>())

@@ -11,7 +11,10 @@ public class TransactionModel
     [Name("Posting Date", "Transaction Date")]
     public DateTime TrxDate { get; set; }
 
+    [Name("Amount")]
     public decimal Amount { get; set; }
+
+    [Name("Description")]
     public string? Description { get; set; }
 
     [Name("Transaction Category", "Category")]
@@ -20,12 +23,19 @@ public class TransactionModel
     [Name("Transaction Type", "Type")]
     public string? TransactionType { get; set; }
 
+    [Optional]
     [Name("Check Number")]
     public string? CheckNumber { get; set; }
 
+    [Optional]
     [Name("Reference Number")]
     public string? ReferenceNumber { get; set; }
 
+    [Optional]
+    [Name("Memo")]
     public string? Memo { get; set; }
+
+    [Optional]
+    [Name("Balance")]
     public decimal? Balance { get; set; }
 }
