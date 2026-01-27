@@ -33,6 +33,7 @@ public static class OpenApiConfig
                     flow.TokenUrl = app.Configuration["AzureAd:TokenUrl"];
                     flow.ClientId = app.Configuration["AzureAd:ClientId"];
                     flow.SelectedScopes = [app.Configuration["AzureAd:Scopes"]];
+                    flow.RedirectUri = "https://localhost:7121/scalar/v1";
                 });
             });
         }
