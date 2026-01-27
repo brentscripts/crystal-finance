@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "URpUhv3ZBLA=",
+  "dgSpecHash": "t3zrC15P3Rw=",
   "success": true,
   "projectFilePath": "C:\\Users\\brent\\GitHub\\crystal-finance\\src\\CrystalFinance.Api\\CrystalFinance.Api.csproj",
   "expectedPackageFiles": [
@@ -36,9 +36,10 @@
     "C:\\Users\\brent\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\8.15.0\\microsoft.identitymodel.protocols.openidconnect.8.15.0.nupkg.sha512",
     "C:\\Users\\brent\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.15.0\\microsoft.identitymodel.tokens.8.15.0.nupkg.sha512",
     "C:\\Users\\brent\\.nuget\\packages\\microsoft.identitymodel.validators\\8.15.0\\microsoft.identitymodel.validators.8.15.0.nupkg.sha512",
-    "C:\\Users\\brent\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\brent\\.nuget\\packages\\microsoft.openapi\\2.6.1\\microsoft.openapi.2.6.1.nupkg.sha512",
     "C:\\Users\\brent\\.nuget\\packages\\mysql.data\\9.5.0\\mysql.data.9.5.0.nupkg.sha512",
-    "C:\\Users\\brent\\.nuget\\packages\\scalar.aspnetcore\\2.12.11\\scalar.aspnetcore.2.12.11.nupkg.sha512",
+    "C:\\Users\\brent\\.nuget\\packages\\scalar.aspnetcore\\2.12.18\\scalar.aspnetcore.2.12.18.nupkg.sha512",
+    "C:\\Users\\brent\\.nuget\\packages\\scalar.aspnetcore.microsoft\\2.12.18\\scalar.aspnetcore.microsoft.2.12.18.nupkg.sha512",
     "C:\\Users\\brent\\.nuget\\packages\\system.clientmodel\\1.0.0\\system.clientmodel.1.0.0.nupkg.sha512",
     "C:\\Users\\brent\\.nuget\\packages\\system.configuration.configurationmanager\\8.0.0\\system.configuration.configurationmanager.8.0.0.nupkg.sha512",
     "C:\\Users\\brent\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.15.0\\system.identitymodel.tokens.jwt.8.15.0.nupkg.sha512",

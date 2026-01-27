@@ -70,9 +70,17 @@
               "target": "Package",
               "version": "[8.15.0, )"
             },
+            "Microsoft.OpenApi": {
+              "target": "Package",
+              "version": "[2.6.1, )"
+            },
             "Scalar.AspNetCore": {
               "target": "Package",
-              "version": "[2.12.11, )"
+              "version": "[2.12.18, )"
+            },
+            "Scalar.AspNetCore.Microsoft": {
+              "target": "Package",
+              "version": "[2.12.18, )"
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",

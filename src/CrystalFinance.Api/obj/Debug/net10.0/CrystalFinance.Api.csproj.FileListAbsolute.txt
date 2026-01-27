@@ -82,3 +82,4 @@ C:\Users\brent\GitHub\crystal-finance\src\CrystalFinance.Api\bin\Debug\net10.0\r
 C:\Users\brent\GitHub\crystal-finance\src\CrystalFinance.Api\bin\Debug\net10.0\runtimes\win\lib\net8.0\System.Windows.Extensions.dll
 C:\Users\brent\GitHub\crystal-finance\src\CrystalFinance.Api\bin\Debug\net10.0\CrystalFinanceLibrary.dll
 C:\Users\brent\GitHub\crystal-finance\src\CrystalFinance.Api\bin\Debug\net10.0\CrystalFinanceLibrary.pdb
+C:\Users\brent\GitHub\crystal-finance\src\CrystalFinance.Api\bin\Debug\net10.0\Scalar.AspNetCore.Microsoft.dll

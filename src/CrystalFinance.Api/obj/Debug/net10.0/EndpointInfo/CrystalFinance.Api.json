@@ -1,8 +1,7 @@
 {
   "openapi": "3.1.1",
   "info": {
-    "title": "CrystalFinance.Api | v1",
-    "version": "1.0.0"
+    "title": "Echo AyelixProxyApi"
   },
   "servers": [
     {
@@ -308,8 +307,29 @@
           }
         }
       }
+    },
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://login.microsoftonline.com/22e53a03-20ac-4ee2-b320-50d285a5e6d3/oauth2/v2.0/authorize",
+            "tokenUrl": "https://login.microsoftonline.com/22e53a03-20ac-4ee2-b320-50d285a5e6d3/oauth2/v2.0/token",
+            "scopes": {
+              "api://871dfad9-f176-411b-93a1-809a74460ac2/access_as_user": "API.UserAccess"
+            }
+          }
+        }
+      }
     }
   },
+  "security": [
+    {
+      "OAuth2": [
+        "api://871dfad9-f176-411b-93a1-809a74460ac2/access_as_user"
+      ]
+    }
+  ],
   "tags": [
     {
       "name": "CrystalFinance"
