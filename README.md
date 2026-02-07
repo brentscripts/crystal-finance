@@ -180,3 +180,40 @@ Manual CRUD can be performed using:
 - .NET Web API to centralize business logic
 - Azure DevOps CI/CD pipelines
 - Azure-hosted, containerized deployment
+
+---
+
+## Phase II (Roadmap / Future)
+
+### .NET Web API - How to use Scalar with OAuth2.0
+
+1. **Register your application** in Azure AD to obtain your **Client ID** and **Tenant ID**.
+2. **Configure Scalar** in your `Program.cs`:
+    - **Startup folder**
+        - `OpenApiConfig.cs`
+        - `OpenApiTransformer.cs` 
+
+    > [!TIP]
+    > This code is based on an implementation by **Hals**.
+    > 
+    > * **Source:** ["Setup Scalar with Microsoft.AspNetCore.OpenApi and OAuth2"](https://hals.app)
+    > * **Link:** [hals.app/blog/dotnet-openapi-scalar-oauth2](https://hals.app)
+
+3. **Modify `launchsettings.json`**:
+    ```json
+    "launchBrowser": true,
+    "launchUrl": "scalar/v1"
+    ```
+
+4. **Test API endpoint in Scalar**:
+    - Select a controller endpoint and click the **Test Request** button.
+    - Set **Authentication** settings required for the [Microsoft Identity Client (MSAL)](https://learn.microsoft.com) library to acquire an access token:
+        - **Use PKCE:** `SHA-256`
+        - **Credentials Location:** `Body`
+        - **Scopes Selected:** Select available value
+        - **Query Parameters:** Enter values if applicable
+        - **Request Body:** Enter values if applicable
+
+5. Click the **Authorize** button to get Token.
+
+6. Click the **Send** button to execute the request and view the response.
