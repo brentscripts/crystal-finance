@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalFinanceLibrary", "Cr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalFinance.Api", "CrystalFinance.Api\CrystalFinance.Api.csproj", "{F957CEC7-7E97-4629-A542-7ACFC41641F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalFinance.Ui", "CrystalFinance.Ui\CrystalFinance.Ui.csproj", "{84C07C85-A480-4D50-B970-21A550C1BB92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F957CEC7-7E97-4629-A542-7ACFC41641F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F957CEC7-7E97-4629-A542-7ACFC41641F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F957CEC7-7E97-4629-A542-7ACFC41641F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C07C85-A480-4D50-B970-21A550C1BB92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84C07C85-A480-4D50-B970-21A550C1BB92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84C07C85-A480-4D50-B970-21A550C1BB92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84C07C85-A480-4D50-B970-21A550C1BB92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
