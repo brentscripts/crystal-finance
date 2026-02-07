@@ -57,3 +57,11 @@ Desktop.ini
 .vscode/
 .code-workspace.vs/
 .vs/
+
+#############################
+# .NET / C# 
+#############################
+[Bb]in/
+[Oo]bj/
+# MSBuild Binary Logs
+*.binlog
