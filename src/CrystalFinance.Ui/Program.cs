@@ -2,6 +2,7 @@ using CrystalFinance.Ui;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using CrystalFinance.Ui.Models;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -25,7 +26,7 @@ builder.Services.AddScoped(sp =>
     };
 });
 
-builder.Services.AddMsalAuthentication(options =>
+builder.Services.AddMsalAuthentication<RemoteAuthenticationState,CustomUserAccount>(options =>
 {
     builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
 
@@ -36,8 +37,9 @@ builder.Services.AddMsalAuthentication(options =>
         foreach (var scope in scopes.Where(s => !string.IsNullOrWhiteSpace(s)))
         {
             options.ProviderOptions.DefaultAccessTokenScopes.Add(scope.Trim());
+            options.UserOptions.RoleClaim = "appRole"; // Map Entra ID roles to "appRole" claim
         }
     }
-});
+}).AddAccountClaimsPrincipalFactory<RemoteAuthenticationState,CustomUserAccount,CustomAccountFactory>();
 
 await builder.Build().RunAsync();

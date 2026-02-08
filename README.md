@@ -183,7 +183,7 @@ Manual CRUD can be performed using:
 
 ---
 
-## Phase II (Roadmap / Future)
+## Phase II (Quality reference for future self)
 
 ### .NET Web API - How to use Scalar with OAuth2.0
 
@@ -222,21 +222,23 @@ Manual CRUD can be performed using:
 ### Configure Blazor WASM UI with Entra ID
 
 > [!TIP]
-    > **Code with Anjuli** (Youtube video)
-    > 
-    > * **Source:** ["Configure Blazor WebAssembly with Entra ID (.NET 8)"](https://www.youtube.com/watch?v=XHB5aqcvxBg)
+> **Learning Resource:** This configuration follows the guide by [Anjuli Johnson](https://www.youtube.com/watch?v=XHB5aqcvxBg) for .NET 8 Entra ID integration.
 
-- **Register your Blazor application** in Azure AD to obtain your **Client ID** and **Tenant ID**.
-    - Single-page application (SPA) registration
-    - Redirect URI: `https://localhost/authentication/login-callback`
-    - Authentication settings: **Access tokens**, **ID tokens** `unchecked` for Blazor WASM
-    - API permissions: Add permissions for your Web API (e.g., `api://<client-id>/access_as_user`)
-        - Click Add Permission > API my organization uses > Search for your API > Select permissions > Add permissions
-        - Click Grant admin consent for Default Directory 
-    - Owners: Click Add Owners > Search for your user account > Select and add
-- In Visual Studio, create a new blazor webassembly project with **Microsoft Identity** authentication.
-    - Visual Studio will walk you through Microsoft Identity configuration during project setup.
-    - Add permission to call your Web API (settings found in `Expose an API` section of your API registration in Azure AD).
-        - API URL (Application ID URI): This is the unique identifier for your API, found in the Expose an API blade of the CrystalFinance.Api registration. It usually follows the format: api://{WEB_API_CLIENT_ID}.
-        - Scopes: These are the specific permissions defined by your API. You must enter the full scope URI (e.g., api://{WEB_API_CLIENT_ID}/access_as_user). 
-    - Leave Microsoft Graph permissions as default `User.Read` for now (you can add more later if needed).
+#### 1. Azure Portal Setup
+- **Register Application:** Register as a **Single-page application (SPA)**.
+    - **Redirect URI:** `https://localhost:[PORT]/authentication/login-callback`
+    - **Authentication:** Ensure **Access tokens** and **ID tokens** are **unchecked** (MSAL uses Authorization Code Flow + PKCE).
+- **App Roles:** Create an `Admin` role in **App roles** > **Create app role**.
+- **Assignment:** Assign your user to the role via **Enterprise Applications** > **Users and groups**.
+    - *Note: On Free Tier tenants, assign individual users directly as Group assignment is restricted.*
+- **API Permissions:** 
+    - Add `api://<client-id>/access_as_user`.
+    - Click **Grant admin consent** for the directory.
+
+#### 2. Visual Studio Setup
+- Create Blazor WASM with **Microsoft Identity** authentication.
+- **Scopes:** Use the full URI: `api://{WEB_API_CLIENT_ID}/access_as_user`.
+- **Default Scopes:** Keep `User.Read` for basic profile access.
+
+## Credits & Attributions
+- **Entra ID Role Mapping:** The `CustomAccountFactory` logic is based on the [CodeWithAnjuli GitHub Repository](https://github.com).
