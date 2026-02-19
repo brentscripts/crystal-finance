@@ -7,14 +7,6 @@
 *.ps1.tmp
 *.ps1_backup
 
-# Local config + credentials
-*.env
-config.json
-secrets.json
-# Ignore appsettings files with secrets
-appsettings.*.json
-appsettings.json
-
 #############################
 # CSV Data Files
 #############################
@@ -63,5 +55,23 @@ Desktop.ini
 #############################
 [Bb]in/
 [Oo]bj/
-# MSBuild Binary Logs
 *.binlog
+
+# User-specific files (KEEP THESE IGNORED)
+*.csproj.user
+*.slnLauncher.user
+*.suo
+*.user
+.vs/
+
+#############################
+# Configuration
+#############################
+# DO NOT ignore the main files (they contain the structure)
+!appsettings.json
+
+# DO ignore local overrides and actual secrets
+appsettings.Development.json
+appsettings.Local.json
+*.secrets.json
+.env
