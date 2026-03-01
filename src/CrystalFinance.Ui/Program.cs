@@ -1,5 +1,6 @@
 using CrystalFinance.Ui;
 using CrystalFinance.Ui.Models;
+using CrystalFinance.Ui.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -46,5 +47,25 @@ builder.Services.AddMsalAuthentication<RemoteAuthenticationState,CustomUserAccou
         }
     }
 }).AddAccountClaimsPrincipalFactory<RemoteAuthenticationState,CustomUserAccount,CustomAccountFactory>();
+
+builder.Services.AddHttpClient<TransactionProcessingService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["CrystalFinanceApi:BaseUrl"] ?? string.Empty);
+}).AddHttpMessageHandler(sp =>
+{
+    // Get a fresh handler from DI
+    var handler = sp.GetRequiredService<AuthorizationMessageHandler>();
+
+    // Configure it specifically for your Finance API
+    var apiBaseUrl = builder.Configuration["CrystalFinanceApi:BaseUrl"] ?? string.Empty;
+    var apiScopes = builder.Configuration.GetSection("DownstreamApi:Scopes").Get<string[]>() ?? Array.Empty<string>();
+
+    return handler.ConfigureHandler(
+        authorizedUrls: new[] { apiBaseUrl },
+        scopes: apiScopes
+    );
+});
+
+//builder.Services.AddHttpClient<FinanceCrudService>();
 
 await builder.Build().RunAsync();
