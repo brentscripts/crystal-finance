@@ -183,7 +183,7 @@ Manual CRUD can be performed using:
 
 ---
 
-## Under Construction: Crystal-Finance v2 ![Status: WIP](https://shields.io)
+## Under Construction: Crystal-Finance v2
 
 ### .NET Web API - How to use Scalar with OAuth2.0
 
