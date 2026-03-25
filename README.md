@@ -240,3 +240,6 @@ Manual CRUD can be performed using:
         - API URL (Application ID URI): This is the unique identifier for your API, found in the Expose an API blade of the CrystalFinance.Api registration. It usually follows the format: api://{WEB_API_CLIENT_ID}.
         - Scopes: These are the specific permissions defined by your API. You must enter the full scope URI (e.g., api://{WEB_API_CLIENT_ID}/access_as_user). 
     - Leave Microsoft Graph permissions as default `User.Read` for now (you can add more later if needed).
+
+## License
+Copyright (c) 2026 Brent Crystal. All rights reserved. No license is granted at this time.
