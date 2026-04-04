@@ -183,7 +183,7 @@ Manual CRUD can be performed using:
 
 ---
 
-## Phase II (Quality reference for future self)
+## Under Construction: Crystal-Finance v2
 
 ### .NET Web API - How to use Scalar with OAuth2.0
 
@@ -242,3 +242,24 @@ Manual CRUD can be performed using:
 
 ## Credits & Attributions
 - **Entra ID Role Mapping:** The `CustomAccountFactory` logic is based on the [CodeWithAnjuli GitHub Repository](https://github.com).
+    > **Code with Anjuli** (Youtube video)
+    > 
+    > * **Source:** ["Configure Blazor WebAssembly with Entra ID (.NET 8)"](https://www.youtube.com/watch?v=XHB5aqcvxBg)
+
+- **Register your Blazor application** in Azure AD to obtain your **Client ID** and **Tenant ID**.
+    - Single-page application (SPA) registration
+    - Redirect URI: `https://localhost/authentication/login-callback`
+    - Authentication settings: **Access tokens**, **ID tokens** `unchecked` for Blazor WASM
+    - API permissions: Add permissions for your Web API (e.g., `api://<client-id>/access_as_user`)
+        - Click Add Permission > API my organization uses > Search for your API > Select permissions > Add permissions
+        - Click Grant admin consent for Default Directory 
+    - Owners: Click Add Owners > Search for your user account > Select and add
+- In Visual Studio, create a new blazor webassembly project with **Microsoft Identity** authentication.
+    - Visual Studio will walk you through Microsoft Identity configuration during project setup.
+    - Add permission to call your Web API (settings found in `Expose an API` section of your API registration in Azure AD).
+        - API URL (Application ID URI): This is the unique identifier for your API, found in the Expose an API blade of the CrystalFinance.Api registration. It usually follows the format: api://{WEB_API_CLIENT_ID}.
+        - Scopes: These are the specific permissions defined by your API. You must enter the full scope URI (e.g., api://{WEB_API_CLIENT_ID}/access_as_user). 
+    - Leave Microsoft Graph permissions as default `User.Read` for now (you can add more later if needed).
+
+## License
+Copyright (c) 2026 Brent Crystal. All rights reserved. No license is granted at this time.
