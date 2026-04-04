@@ -24,7 +24,7 @@ public class OpenApiTransformer(IConfiguration configuration) : IOpenApiDocument
         var scopes = new Dictionary<string, string>
         {
             {
-                configuration["AzureAd:Scopes"], // Actual Scope
+                configuration["AzureAd:Scopes"]!, // Actual Scope
                 "API.UserAccess" // Human readable description
             },
         };
@@ -38,8 +38,8 @@ public class OpenApiTransformer(IConfiguration configuration) : IOpenApiDocument
                 {
                     AuthorizationCode = new OpenApiOAuthFlow
                     {
-                        AuthorizationUrl = new Uri(configuration["AzureAd:AuthorizationUrl"]),
-                        TokenUrl = new Uri(configuration["AzureAd:TokenUrl"]),
+                        AuthorizationUrl = new Uri(configuration["AzureAd:AuthorizationUrl"]!),
+                        TokenUrl = new Uri(configuration["AzureAd:TokenUrl"]!),
                         Scopes = scopes,
                     },
                 },

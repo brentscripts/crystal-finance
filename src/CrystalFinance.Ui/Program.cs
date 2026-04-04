@@ -1,11 +1,18 @@
 using CrystalFinance.Ui;
+using CrystalFinance.Ui.Models;
+using CrystalFinance.Ui.Services;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
+
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Services.AddMudServices();
 
 builder.Services.AddScoped(sp => 
 {
@@ -25,7 +32,7 @@ builder.Services.AddScoped(sp =>
     };
 });
 
-builder.Services.AddMsalAuthentication(options =>
+builder.Services.AddMsalAuthentication<RemoteAuthenticationState,CustomUserAccount>(options =>
 {
     builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
 
@@ -36,8 +43,29 @@ builder.Services.AddMsalAuthentication(options =>
         foreach (var scope in scopes.Where(s => !string.IsNullOrWhiteSpace(s)))
         {
             options.ProviderOptions.DefaultAccessTokenScopes.Add(scope.Trim());
+            options.UserOptions.RoleClaim = "appRole"; // Map Entra ID roles to "appRole" claim
         }
     }
+}).AddAccountClaimsPrincipalFactory<RemoteAuthenticationState,CustomUserAccount,CustomAccountFactory>();
+
+builder.Services.AddHttpClient<TransactionProcessingService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["CrystalFinanceApi:BaseUrl"] ?? string.Empty);
+}).AddHttpMessageHandler(sp =>
+{
+    // Get a fresh handler from DI
+    var handler = sp.GetRequiredService<AuthorizationMessageHandler>();
+
+    // Configure it specifically for your Finance API
+    var apiBaseUrl = builder.Configuration["CrystalFinanceApi:BaseUrl"] ?? string.Empty;
+    var apiScopes = builder.Configuration.GetSection("DownstreamApi:Scopes").Get<string[]>() ?? Array.Empty<string>();
+
+    return handler.ConfigureHandler(
+        authorizedUrls: new[] { apiBaseUrl },
+        scopes: apiScopes
+    );
 });
+
+//builder.Services.AddHttpClient<FinanceCrudService>();
 
 await builder.Build().RunAsync();

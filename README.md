@@ -222,6 +222,26 @@ Manual CRUD can be performed using:
 ### Configure Blazor WASM UI with Entra ID
 
 > [!TIP]
+> **Learning Resource:** This configuration follows the guide by [Anjuli Johnson](https://www.youtube.com/watch?v=XHB5aqcvxBg) for .NET 8 Entra ID integration.
+
+#### 1. Azure Portal Setup
+- **Register Application:** Register as a **Single-page application (SPA)**.
+    - **Redirect URI:** `https://localhost:[PORT]/authentication/login-callback`
+    - **Authentication:** Ensure **Access tokens** and **ID tokens** are **unchecked** (MSAL uses Authorization Code Flow + PKCE).
+- **App Roles:** Create an `Admin` role in **App roles** > **Create app role**.
+- **Assignment:** Assign your user to the role via **Enterprise Applications** > **Users and groups**.
+    - *Note: On Free Tier tenants, assign individual users directly as Group assignment is restricted.*
+- **API Permissions:** 
+    - Add `api://<client-id>/access_as_user`.
+    - Click **Grant admin consent** for the directory.
+
+#### 2. Visual Studio Setup
+- Create Blazor WASM with **Microsoft Identity** authentication.
+- **Scopes:** Use the full URI: `api://{WEB_API_CLIENT_ID}/access_as_user`.
+- **Default Scopes:** Keep `User.Read` for basic profile access.
+
+## Credits & Attributions
+- **Entra ID Role Mapping:** The `CustomAccountFactory` logic is based on the [CodeWithAnjuli GitHub Repository](https://github.com).
     > **Code with Anjuli** (Youtube video)
     > 
     > * **Source:** ["Configure Blazor WebAssembly with Entra ID (.NET 8)"](https://www.youtube.com/watch?v=XHB5aqcvxBg)

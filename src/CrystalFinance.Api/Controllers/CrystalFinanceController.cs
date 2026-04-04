@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CrystalFinanceLibrary.Data;
+using CrystalFinanceLibrary.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CrystalFinance.Api.Controllers;
@@ -8,11 +10,19 @@ namespace CrystalFinance.Api.Controllers;
 [Authorize(Policy = "API.UserAccess")]
 public class CrystalFinanceController : ControllerBase
 {
+    private readonly IMySqlDataService _data;
+
+    public CrystalFinanceController(IMySqlDataService sqlCrud)
+    {
+        _data = sqlCrud;
+    }
+
     // GET: api/<CrystalFinanceController>
     [HttpGet]
-    public IEnumerable<string> Get()
+    public async Task<ActionResult<IEnumerable<TransactionModel>>> Get()
     {
-        return new string[] { "value1", "value2" };
+        var output = await _data.GetAllTransactions();
+        return Ok(output);
     }
 
     // GET api/<CrystalFinanceController>/5
