@@ -1,4 +1,6 @@
-﻿using CrystalFinanceLibrary.Models;
+﻿ 
+using CrystalFinance.Ui.Enums;
+using CrystalFinanceLibrary.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
 using System;
@@ -14,6 +16,11 @@ public class TransactionImportService
 {
     public async IAsyncEnumerable<TransactionModel> ImportTransactions(Stream fileStream, string source)
     {
+        if(!Enum.TryParse<TranSourceType>(source, true, out var parsedSource))
+        {
+            throw new ArgumentException($"Invalid source type: {source}");
+        }
+
         using var streamReader = new StreamReader(fileStream);
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
@@ -28,7 +35,7 @@ public class TransactionImportService
 
         await foreach (var record in csv.GetRecordsAsync<TransactionModel>())
         {
-            record.Source = source;
+            record.Source = parsedSource;
             yield return record;
         }
     }
