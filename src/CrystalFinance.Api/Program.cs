@@ -16,15 +16,14 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.AddDependencies();
 builder.AddAuthentication();
 builder.Services.AddCorsPolicy(builder.Configuration);
-builder.Services.AddScoped<TransactionImportService>();
-builder.Services.AddScoped<IMySqlDataService, MySqlData>(sp =>
-    new MySqlData(connectionString));
 
 var app = builder.Build();
 
 app.UseOpenApi();
 
 app.UseHttpsRedirection();
+
+app.UseResponseCaching();
 
 app.UseCustomCors();
 
@@ -33,5 +32,16 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Health check endpoints
+app.MapHealthChecks("/health");                          // Overall health
+app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions 
+{ 
+    Predicate = check => check.Tags.Contains("live")     // Liveness probe (K8s)
+});
+app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions 
+{ 
+    Predicate = check => check.Tags.Contains("ready")    // Readiness probe (K8s) 
+});
 
 app.Run();
