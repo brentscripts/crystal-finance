@@ -25,6 +25,7 @@ public class MySqlDataAccess
       string connectionString)
     {
         using var connection = new MySqlConnection(connectionString);
+        //await connection.OpenAsync().ConfigureAwait(false);
 
         var rows = await connection
             .QueryAsync<T>(sqlStatement, parameters)
@@ -40,20 +41,15 @@ public class MySqlDataAccess
     /// <param name="sqlStatement">The SQL command to execute.</param>
     /// <param name="parameters">The parameters used by the SQL command.</param>
     /// <param name="connectionString">The MySQL connection string.</param>
-    /// <remarks>
-    /// WARNING: async void should generally be avoided except for event handlers.
-    /// Consider changing this to Task so errors can be awaited and handled properly.
-    /// </remarks>
     public async Task SaveDataAsync<T>(
       string sqlStatement,
       T parameters,
       string connectionString)
     {
-        using(IDbConnection connection = new MySqlConnection(connectionString))
-        {
-            await connection
-                .ExecuteAsync(sqlStatement, parameters)
-                .ConfigureAwait(false);
-        }
+        using var connection = new MySqlConnection(connectionString);
+        //await connection.OpenAsync().ConfigureAwait(false);
+        await connection
+            .ExecuteAsync(sqlStatement, parameters)
+            .ConfigureAwait(false);
     }
 }

@@ -15,7 +15,7 @@ public class OpenApiTransformer(IConfiguration configuration) : IOpenApiDocument
     {
         document.Info = new OpenApiInfo
         {
-            Title = "Echo AyelixProxyApi"
+            Title = "Crystal Finance API"
         };
 
         var authority = configuration["AzureAd:AuthorityUrl"]; // Learn more here https://learn.microsoft.com/en-us/entra/identity-platform/msal-client-application-configuration#authority

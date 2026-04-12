@@ -71,7 +71,7 @@
     private void NewItemAsync()
     {
         // Source is required, so we provide a default for manual entries
-        var elem = new TransactionModel { TrxDate = DateTime.Today, Source = "Manual" };
+        var elem = new TransactionModel { TrxDate = DateTime.Today, Source = null };
         Transactions.Insert(0, elem);
         StateHasChanged();
     }
