@@ -261,29 +261,6 @@ Total: **16/16 passing**
 
 ---
 
-## 📖 Documentation
-
-Comprehensive documentation for deployment, configuration, and troubleshooting:
-
-👉 **[COMPLETE_DOCUMENTATION.md](./COMPLETE_DOCUMENTATION.md)**
-
-Covers:
-- Quick Start
-- Project Overview
-- API Endpoints Reference
-- Architecture & Code Review
-- Pre-Deployment Checklist
-- **Deployment Guide** (Azure, Docker, Self-Hosted)
-- Configuration Reference
-- Post-Deployment Verification
-- Troubleshooting (6 common issues)
-- Database Schema
-- Monitoring & Maintenance
-
----
-
-## 🔐 Security
-
 - **OAuth2.0** - Microsoft Entra ID authentication
 - **JWT Tokens** - Bearer token authorization
 - **Scope-based Access** - Granular permission control
@@ -313,8 +290,6 @@ Ready for production deployment to:
 - **Docker Containers** (portable)
 - **Self-Hosted** (Windows IIS / Linux systemd)
 
-See **[COMPLETE_DOCUMENTATION.md](./COMPLETE_DOCUMENTATION.md)** → Deployment Guide section for step-by-step instructions.
-
 ---
 
 ## 📁 Project Structure
@@ -334,8 +309,6 @@ crystal-finance/
 │   ├── CrystalFinance.Tests/            # Unit tests
 │   │   ├── Models/                      # Validation tests
 │   │   └── Controllers/                 # Health check tests
-│   └── DOCUMENTATION.md                 # Pointer to root docs
-├── COMPLETE_DOCUMENTATION.md            # Full documentation
 └── README.md                            # This file
 ```
 
@@ -349,7 +322,6 @@ crystal-finance/
 | `src/CrystalFinance.Api/Controllers/CrystalFinanceController.cs` | CRUD endpoints |
 | `src/CrystalFinanceLibrary/Models/TransactionModel.cs` | Data model with validation |
 | `src/CrystalFinanceLibrary/Data/MySqlData.cs` | Repository with pagination |
-| `COMPLETE_DOCUMENTATION.md` | Comprehensive deployment & usage guide |
 
 ---
 
@@ -399,16 +371,6 @@ This is a personal project. Contributions are not currently accepted.
 
 ---
 
-## 📞 Support
-
-For issues, questions, or deployment help:
-
-1. **Check** [COMPLETE_DOCUMENTATION.md](./COMPLETE_DOCUMENTATION.md)
-2. **Search** the Troubleshooting section
-3. **Review** API endpoint documentation in Scalar UI
-
----
-
 ## 📜 License
 
 Copyright (c) 2026 Brent Crystal. All rights reserved.
@@ -422,6 +384,3 @@ Copyright (c) 2026 Brent Crystal. All rights reserved.
 
 ---
 
-**Status: ✅ Production Ready — Deploy With Confidence** 🚀
-
-Next step? Read [COMPLETE_DOCUMENTATION.md](./COMPLETE_DOCUMENTATION.md) for deployment instructions.
