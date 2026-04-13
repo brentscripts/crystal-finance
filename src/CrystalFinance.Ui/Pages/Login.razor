@@ -1,0 +1,56 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
+@attribute [AllowAnonymous]
+
+@* The Overlay dims the background and blocks all mouse events *@
+<MudOverlay Visible="true"
+            DarkBackground="true"
+            AutoClose="false"
+            ZIndex="9999"
+            Class="d-flex align-center justify-center"
+            LockScroll="true">
+    
+    <MudPaper Elevation="25"
+              Class="pa-8 d-flex flex-column align-center"
+              Style="width: 400px; border-radius: 16px;">
+        
+        <MudIcon Icon="@Icons.Material.Filled.Lock" Color="Color.Primary" Size="Size.Large" Class="mb-4" />
+        
+        <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">Secure Access</MudText>
+        <MudText Typo="Typo.body1" Align="Align.Center" Class="mb-8">
+            Please sign in to continue to the application.
+        </MudText>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   FullWidth="true"
+                   OnClick="BeginLogin"
+                   StartIcon="@Icons.Material.Filled.Login">
+            Sign In
+        </MudButton>
+    </MudPaper>
+</MudOverlay>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private void BeginLogin()
+    {
+        Navigation.NavigateToLogin("authentication/login", new InteractiveRequestOptions
+        {
+            Interaction = InteractionType.SignIn,
+            ReturnUrl = "/"
+        });
+    }
+}
