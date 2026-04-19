@@ -1,10 +1,7 @@
 using CrystalFinance.Api.Startup;
 using CrystalFinance.Ui.Enums;
-using CrystalFinanceLibrary.Data;
-using CrystalFinanceLibrary.Logic;
 using Dapper;
 using System.Data;
-using System.Runtime.Intrinsics.X86;
 
 SqlMapper.AddTypeMap(typeof(TranSourceType), DbType.String);
 

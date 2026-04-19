@@ -1,8 +1,7 @@
 ﻿using CrystalFinance.Api.HealthChecks;
 using CrystalFinanceLibrary.Data;
 using CrystalFinanceLibrary.Logic;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace CrystalFinance.Api.Startup;
@@ -14,6 +13,8 @@ public static class DependenciesConfig
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
             {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 

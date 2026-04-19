@@ -1,7 +1,7 @@
 ﻿using CrystalFinanceLibrary.Logic;
+using CrystalFinanceLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace CrystalFinance.Api.Controllers
 {
@@ -21,13 +21,13 @@ namespace CrystalFinance.Api.Controllers
             if (file == null || file.Length == 0)
             {
                 _logger.LogWarning("Import request rejected. No file uploaded. Source: {Source}", source);
-                return BadRequest("No file uploaded.");
+                return BadRequest(new ApiResponse<object> { Success = false, Message = "No file uploaded." });
             }
 
             if (string.IsNullOrWhiteSpace(source))
             {
                 _logger.LogWarning("Import request rejected. No source specified. FileName: {FileName}", file.FileName);
-                return BadRequest("Source parameter is required.");
+                return BadRequest(new ApiResponse<object> { Success = false, Message = "Source parameter is required." });
             }
 
             try
@@ -41,17 +41,17 @@ namespace CrystalFinance.Api.Controllers
                 _logger.LogInformation("Transaction import completed successfully. RecordCount: {RecordCount}, Source: {Source}", 
                     records.Count, source);
 
-                return Ok(new { message = $"Successfully imported {records.Count} transactions.", data = records });
+                return Ok(new ApiResponse<List<TransactionModel>>{ Success = true, Message = $"Successfully imported {records.Count} transactions.", Data = records });
             }
             catch (ArgumentException ex)
             {
                 _logger.LogWarning(ex, "Invalid argument during import. Source: {Source}, FileName: {FileName}", source, file.FileName);
-                return BadRequest($"Invalid input: {ex.Message}");
+                return BadRequest(new ApiResponse<object> { Success=false, Message = $"Invalid input: {ex.Message}" });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error importing transactions. Source: {Source}, FileName: {FileName}", source, file.FileName);
-                return StatusCode(500, "An error occurred while importing transactions.");
+                return StatusCode(500, new ApiResponse<object> { Success = false, Message ="An error occurred while importing transactions." });
             }
         }
     }
