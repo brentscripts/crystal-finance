@@ -1,23 +1,29 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
-<MudPopoverProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+<div class="d-flex flex-column min-vh-100">
+    <!-- Header: Pass the Toggle method to the Header -->
+    <Header OnToggleSidebar="ToggleSidebar" />
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    <div class="d-flex flex-grow-1">
+        <!-- Sidebar: Toggled by C# logic -->
+        <aside class="@(CollapseNavMenu ? "d-none" : "d-block") col-md-3 col-lg-2 bg-light border-end transition-all">
+            <SideBar />
+        </aside>
 
-    <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-         <article class="content px-4">
+        <!-- Main Content -->
+        <main class="flex-grow-1 p-4">
             @Body
-        </article>
-    </main>
+        </main>
+    </div>
+    <Footer />
 </div>
+
+@code {
+    private bool CollapseNavMenu { get; set; } = true;
+
+    private void ToggleSidebar()
+    {
+        CollapseNavMenu = !CollapseNavMenu;
+    }
+}
+

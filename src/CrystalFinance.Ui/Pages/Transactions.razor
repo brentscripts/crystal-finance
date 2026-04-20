@@ -1,34 +1,6 @@
 ﻿@page "/transactions"
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
-    <MudGrid>
-        @* Header Row *@
-        <MudItem xs="12">
-            <MudText Typo="Typo.h4" GutterBottom="true">Import Transactions</MudText>
-        </MudItem>
 
-        @* Upload Section - Takes full width *@
-        <MudItem xs="12">
-            <MudExpansionPanels MultiExpansion="false">
-                <MudExpansionPanel Text="Import New Statement" Icon="@Icons.Material.Filled.CloudUpload">
-                    <TranFilePicker OnDataImported="HandleNewData" />
-                </MudExpansionPanel>
-            </MudExpansionPanels>
-        </MudItem>
-
-        @* DataGrid Section*@
-        <MudItem xs="12">
-            @if (_transactions.Any())
-            {
-                <TranDataGrid Transactions="_transactions" />
-            }
-            else
-            {
-                <MudAlert Severity="MudBlazor.Severity.Info">No transactions loaded. Upload a CSV to begin.</MudAlert>
-            }
-        </MudItem>
-    </MudGrid>
-</MudContainer>
 
 @code {
     private List<TransactionModel> _transactions = new();

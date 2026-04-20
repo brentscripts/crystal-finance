@@ -1,0 +1,44 @@
+﻿<header class="p-3 text-bg-dark mb-4 border-bottom shadow-sm" @attributes="UserAttributes">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <i class="bi bi-wallet2 me-2" style="font-size: 2rem;"></i>
+            </a>
+
+            <button class="btn text-white" @onclick="Toggle">
+                <i class="bi bi-list fs-3"></i>
+            </button>
+           
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><NavLink href="" class="nav-link px-2 text-white" Match="NavLinkMatch.All">Home</NavLink></li>
+                <li><NavLink href="import" class="nav-link px-2 text-white">Import</NavLink></li>
+                <li><NavLink href="transactions" class="nav-link px-2 text-white">Transactions</NavLink></li>
+                <li><NavLink href="about" class="nav-link px-2 text-white">About</NavLink></li>
+            </ul>
+
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                <input type="search" class="form-control form-control-dark text-bg-dark border-secondary" placeholder="Search...">
+            </form>
+
+            <div class="text-end">
+                <!-- We just drop the component here! -->
+                <LoginDisplay />
+            </div>
+            
+        </div>
+    </div>
+</header>
+
+@code {
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> UserAttributes { get; set; } = new();
+
+    [Parameter] public EventCallback OnToggleSidebar { get; set; }
+
+    private async Task Toggle()
+    {
+        await OnToggleSidebar.InvokeAsync();
+    }
+}

@@ -1,22 +1,40 @@
 @using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-
 @inject NavigationManager Navigation
 
 <AuthorizeView>
     <Authorized>
-        Hello, @context.User.Identity?.Name!
-        <button class="nav-link btn btn-link" @onclick="BeginLogout">Log out</button>
+        <span class="me-3 text-white">Hello, @context.User.Identity?.Name!</span>
+        <button type="button" class="btn btn-outline-light btn-sm" @onclick="BeginLogout">Logout</button>
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/login">Log in</a>
+        <button type="button" class="btn btn-warning btn-sm fw-bold" @onclick="() => _showModal = true">Login</button>
+
+        @if (_showModal)
+        {
+            <div class="modal-backdrop fade show" style="backdrop-filter: blur(5px);"></div>
+            <div class="modal d-block" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h2 class="fw-bold">Sign In</h2>
+                            <button type="button" class="btn-close" @onclick="() => _showModal = false"></button>
+                        </div>
+                        <div class="modal-body py-3">
+                            <p class="text-muted">Access your dashboard via Microsoft Entra.</p>
+                            <button class="btn btn-lg btn-primary w-100 mt-2" @onclick="BeginLogin">
+                                <i class="bi bi-microsoft me-2"></i>Sign in with Microsoft
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </NotAuthorized>
 </AuthorizeView>
 
-@code{
-    private Task BeginLogout(MouseEventArgs args)
-    {
-        Navigation.NavigateToLogout("authentication/logout");
-        return Task.CompletedTask;
-    }
+@code {
+    private bool _showModal = false;
+    private void BeginLogin() => Navigation.NavigateTo("authentication/login");
+    private void BeginLogout() => Navigation.NavigateTo("authentication/logout");
 }
+
