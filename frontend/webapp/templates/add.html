@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Transaction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Meta token for AJAX -->
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+    <h1>Add Transactions</h1>
+    <div class="add-forms-container">
+
+        <!-- Single Transaction -->
+        <div class="add-form-single">
+            <h2>Single Transaction</h2>
+            <form method="post" novalidate>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required max="{{ today }}">
+
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" required maxlength="200" pattern="^[\\w\\s.,'-]+$">
+
+                <label for="category">Category:</label>
+                <input type="text" id="category" name="category" maxlength="100">
+
+                <label for="amount">Amount:</label>
+                <input type="number" step="0.01" min="0" id="amount" name="amount" required>
+
+                <label for="source">Source:</label>
+                <select id="source" name="source" required>
+                    <option value="">-- Select --</option>
+                    <option value="bank">Bank</option>
+                    <option value="chase">Chase</option>
+                </select>
+
+                <button type="submit">Add Transaction</button>
+            </form>
+        </div>
+
+        <!-- Mass Upload -->
+        <div class="add-form-mass">
+            <h2>Mass Upload via CSV</h2>
+            <form method="post" enctype="multipart/form-data" action="{{ url_for('add') }}" novalidate>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                
+                <label for="file">CSV File:</label>
+                <input type="file" name="file" id="file" accept=".csv" required>
+
+                <label for="source">Transaction Type:</label>
+                <select name="source" id="source" required>
+                    <option value="">-- Select --</option>
+                    <option value="bank">Bank</option>
+                    <option value="chase">Chase</option>
+                </select>
+
+                <button type="submit">Upload & Import</button>
+            </form>
+
+            {% if message %}
+                <p><strong>{{ message }}</strong></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <br>
+    <a href="{{ url_for('index') }}">← Back to Transactions</a>
+</body>
+</html>

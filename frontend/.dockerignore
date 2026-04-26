@@ -1,0 +1,34 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Environment and logs
+.env
+*.log
+*.tmp
+*.bak
+
+# Data files
+*.csv
+*.db
+data/
+grouped_output.csv
+
+# Virtual environments
+venv/
+.env/
+env/
+
+# Test files
+webapp/tests/
+
+# OS files
+.DS_Store
+Thumbs.db
+

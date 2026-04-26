@@ -1,0 +1,235 @@
+:root {
+    --primary-color: #007bff;
+    --primary-color-hover: #0056b3;
+    --light-bg: #f9f9f9;
+    --light-border: #ddd;
+    --table-header-bg: #f4f4f4;
+    --highlight-bg: #e7f1ff;
+    --font-main: Arial, sans-serif;
+    --font-base: Arial, sans-serif;
+    --text-dark: #333;
+    --bg-light: #ffffff;
+    --border-color: #e0e0e0;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 32px;
+}
+
+/* ===== Global Styles ===== */
+body {
+    font-family: var(--font-main);
+    margin: 40px;
+}
+
+h1, h2 {
+    margin-bottom: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+button {
+    margin-top: 16px;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ===== Top Bar ===== */
+.top-bar {
+    margin-bottom: 20px;
+}
+
+/* ===== Form & Input Styles ===== */
+form {
+    max-width: 400px;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    box-sizing: border-box;
+}
+
+/* ===== Filter Form ===== */
+.filter-form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-form input[type="text"] {
+    padding: 8px 12px;
+    font-size: 15px;
+    width: 180px;
+    height: 36px;
+    box-sizing: border-box;
+}
+
+.filter-form button {
+    padding: 8px 18px;
+    font-size: 15px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== Pagination ===== */
+.pagination-controls {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pagination-controls a {
+    padding: 4px 10px;
+    border: 1px solid var(--light-border);
+    border-radius: 4px;
+    margin: 0 2px;
+    color: var(--primary-color);
+    background: var(--light-bg);
+}
+
+.pagination-controls strong {
+    padding: 4px 10px;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    background: var(--highlight-bg);
+    color: var(--primary-color);
+    margin: 0 2px;
+}
+
+.total-count {
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+/* ===== Summary Section ===== */
+.summary {
+    margin-bottom: 30px;
+}
+
+.summary div {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* ===== Tables ===== */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid var(--light-border);
+    text-align: left;
+}
+
+th {
+    background-color: var(--table-header-bg);
+}
+
+/* ===== Actions Column ===== */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ===== Add Forms Layout ===== */
+.add-forms-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-bottom: 40px;
+}
+
+.add-form-single,
+.add-form-mass {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* ===== Button Styles ===== */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color-hover);
+}
+
+/* === Dashboard Page Styles === */
+.dashboard-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    font-family: var(--font-base);
+    color: var(--text-dark);
+}
+
+.dashboard-container h1,
+.dashboard-container h2 {
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-color);
+    text-align: center;
+}
+
+/* Each section for a chart or visualization */
+.dashboard-section {
+    margin-bottom: var(--spacing-lg);
+    background-color: var(--bg-light);
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.dashboard-section canvas {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+}
+
+a:hover {
+    color: var(--primary-color-hover);
+}
+
+/* Optional: responsive tweaks */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: var(--spacing-md);
+    }
+}
+
