@@ -1,4 +1,5 @@
-﻿using CrystalFinanceLibrary.Logic;
+﻿using CrystalFinanceLibrary.Data;
+using CrystalFinanceLibrary.Logic;
 using CrystalFinanceLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,8 +9,9 @@ namespace CrystalFinance.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Policy = "API.UserAccess")]
-    public class TransactionsController(TransactionImportService importService, ILogger<TransactionsController> logger) : ControllerBase
+    public class TransactionsController(IMySqlDataService sqlCrud, TransactionImportService importService, ILogger<TransactionsController> logger) : ControllerBase
     {
+        private readonly IMySqlDataService _data = sqlCrud;
         private readonly TransactionImportService _importService = importService;
         private readonly ILogger<TransactionsController> _logger = logger;
 
@@ -40,6 +42,17 @@ namespace CrystalFinance.Api.Controllers
 
                 _logger.LogInformation("Transaction import completed successfully. RecordCount: {RecordCount}, Source: {Source}", 
                     records.Count, source);
+
+                if (records.Count == 0)
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "The file was parsed but no valid transactions were found."
+                    });
+                }
+
+                await _data.AddTransactionsRange(records);
 
                 return Ok(new ApiResponse<List<TransactionModel>>{ Success = true, Message = $"Successfully imported {records.Count} transactions.", Data = records });
             }
