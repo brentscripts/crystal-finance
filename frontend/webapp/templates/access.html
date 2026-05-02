@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Crystal Finance</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+          "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+          sans-serif;
+        background-color: #f5f7fa;
+        color: #333;
+      }
+
+      .header {
+        background: white;
+        border-bottom: 1px solid #e1e8ed;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: #667eea;
+        text-decoration: none;
+      }
+
+      .nav-items {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .nav-link {
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: color 0.2s;
+        padding: 8px 12px;
+        border-radius: 4px;
+      }
+
+      .nav-link:hover {
+        color: #667eea;
+        background-color: #f0f2f5;
+      }
+
+      .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-left: 1px solid #e1e8ed;
+        padding-left: 20px;
+      }
+
+      .user-info {
+        text-align: right;
+      }
+
+      .user-name {
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+      }
+
+      .user-email {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .logout-btn {
+        background-color: #ff6b6b;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        transition: background-color 0.2s;
+      }
+
+      .logout-btn:hover {
+        background-color: #ff5252;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px 20px;
+      }
+
+      .welcome-section {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .welcome-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .welcome-subtitle {
+        color: #666;
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+      }
+
+      .card-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .card-description {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background-color 0.2s;
+      }
+
+      .btn:hover {
+        background-color: #5568d3;
+      }
+
+      .btn-secondary {
+        background-color: #f0f2f5;
+        color: #333;
+      }
+
+      .btn-secondary:hover {
+        background-color: #e4e6eb;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .feature-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .feature-card h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #333;
+      }
+
+      .feature-card p {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 768px) {
+        .header-content {
+          flex-direction: column;
+          gap: 15px;
+          text-align: center;
+        }
+
+        .nav-items {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .user-menu {
+          flex-direction: column;
+          border: none;
+          padding: 0;
+          gap: 10px;
+        }
+
+        .user-info {
+          text-align: center;
+        }
+
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header Navigation -->
+    <header class="header">
+      <div class="header-content">
+        <a href="{{ url_for('index') }}" class="logo">💰 Crystal Finance</a>
+
+        <nav class="nav-items">
+          <a href="{{ url_for('access') }}" class="nav-link">Dashboard</a>
+          <a href="{{ url_for('transactions') }}" class="nav-link"
+            >Transactions</a
+          >
+          <a href="{{ url_for('add') }}" class="nav-link">Add Transaction</a>
+          <a href="{{ url_for('dashboard') }}" class="nav-link">Analytics</a>
+
+          <div class="user-menu">
+            <div class="user-info">
+              <div class="user-name">{{ user.name or 'User' }}</div>
+              <div class="user-email">{{ user.email }}</div>
+            </div>
+            <div class="avatar">{{ (user.name or 'U')[0].upper() }}</div>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <h1 class="welcome-title">
+          Welcome back, {{ user.name or 'User' }}! 👋
+        </h1>
+        <p class="welcome-subtitle">
+          Manage your finances efficiently with Crystal Finance. Access your
+          transactions, analyze spending patterns, and stay on top of your
+          financial goals.
+        </p>
+
+        <div class="action-buttons">
+          <button class="btn">
+            <span>➕</span>
+            <a
+              href="{{ url_for('add') }}"
+              style="color: white; text-decoration: none"
+              >Add Transaction</a
+            >
+          </button>
+          <button class="btn btn-secondary">
+            <span>📊</span>
+            <a
+              href="{{ url_for('dashboard') }}"
+              style="color: inherit; text-decoration: none"
+              >View Analytics</a
+            >
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Action Cards -->
+      <div class="dashboard-grid">
+        <a href="{{ url_for('transactions') }}" class="card">
+          <div>
+            <div class="card-icon">💳</div>
+            <h3 class="card-title">Transactions</h3>
+            <p class="card-description">
+              View and manage all your financial transactions in one place.
+            </p>
+          </div>
+        </a>
+
+        <a href="{{ url_for('add') }}" class="card">
+          <div>
+            <div class="card-icon">➕</div>
+            <h3 class="card-title">Add Transaction</h3>
+            <p class="card-description">
+              Quickly record new transactions or import from CSV files.
+            </p>
+          </div>
+        </a>
+
+        <a href="{{ url_for('dashboard') }}" class="card">
+          <div>
+            <div class="card-icon">📈</div>
+            <h3 class="card-title">Analytics</h3>
+            <p class="card-description">
+              Visualize spending patterns and financial trends with charts.
+            </p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Features Section -->
+      <div style="margin-top: 40px">
+        <h2 style="font-size: 22px; margin-bottom: 20px; color: #333">
+          Key Features
+        </h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <h3>🔐 Secure Authentication</h3>
+            <p>
+              Enterprise-grade security with Azure Entra ID (OAuth 2.0)
+              authentication.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <h3>📊 Real-time Analytics</h3>
+            <p>
+              Monitor spending patterns, income vs. expenses, and financial
+              trends in real-time.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <h3>📁 Bulk Import</h3>
+            <p>
+              Import transactions from CSV files from multiple sources (Bank,
+              Chase, etc.).
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <h3>🔄 Automatic Sync</h3>
+            <p>
+              Seamlessly synced with MySQL database via REST API for reliable
+              data storage.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <h3>📱 Responsive Design</h3>
+            <p>
+              Access your finances from any device - desktop, tablet, or mobile.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <h3>⚡ Fast & Reliable</h3>
+            <p>
+              Built with ASP.NET Core and React for optimal performance and
+              scalability.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Getting Started Section -->
+      <div
+        style="
+          margin-top: 40px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 30px;
+          border-radius: 8px;
+        "
+      >
+        <h2 style="font-size: 22px; margin-bottom: 15px">Getting Started</h2>
+        <ol style="margin-left: 20px; line-height: 1.8">
+          <li>Add your first transaction using the "Add Transaction" button</li>
+          <li>Organize transactions by category for better tracking</li>
+          <li>Review your analytics to understand spending patterns</li>
+          <li>Set financial goals and monitor progress</li>
+        </ol>
+        <p style="margin-top: 20px; font-size: 13px; opacity: 0.9">
+          Learn more in our
+          <a href="#docs" style="color: white; text-decoration: underline"
+            >documentation</a
+          >
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

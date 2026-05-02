@@ -1,41 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Finance Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='/style.css') }}"
+    />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    
+  </head>
+  <body>
     <a href="{{ url_for('index') }}">← Back to Transactions</a>
 
     <div class="dashboard-container">
-        <h1>Finance Dashboard</h1>
+      <h1>Finance Dashboard</h1>
 
-        <div class="dashboard-section">
-            <h2>Expenses by Category</h2>
-            <canvas id="expensesChart" width="400" height="400"></canvas>
-        </div>
+      <div class="dashboard-section">
+        <h2>Expenses by Category</h2>
+        <canvas id="expensesChart" width="400" height="400"></canvas>
+      </div>
 
-        <div class="dashboard-section">
-            <h2>Monthly Cash Flow</h2>
-            <canvas id="monthlyCashFlowChart" width="600" height="400"></canvas>
-        </div>
+      <div class="dashboard-section">
+        <h2>Monthly Cash Flow</h2>
+        <canvas id="monthlyCashFlowChart" width="600" height="400"></canvas>
+      </div>
 
-        <div class="dashboard-section">
-            <h2>Income vs Expenses</h2>
-            <canvas id="incomeVsExpensesChart" width="400" height="400"></canvas>
-        </div>
+      <div class="dashboard-section">
+        <h2>Income vs Expenses</h2>
+        <canvas id="incomeVsExpensesChart" width="400" height="400"></canvas>
+      </div>
 
-        <div class="dashboard-section">
-            <h2>Donations & Giving vs Income</h2>
-            <canvas id="donationsVsIncomeChart" width="400" height="400"></canvas>
-        </div>
+      <div class="dashboard-section">
+        <h2>Donations & Giving vs Income</h2>
+        <canvas id="donationsVsIncomeChart" width="400" height="400"></canvas>
+      </div>
 
-        <!-- Future visualizations -->
-        
+      <!-- Future visualizations -->
     </div>
     <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
-</body>
+  </body>
 </html>
