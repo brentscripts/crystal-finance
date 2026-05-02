@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+ # 1. MySQL Database
   mysql:
     image: mysql:8
     container_name: finance-mysql
@@ -20,6 +21,47 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # 2. C# Web API
+  web-api:
+    build:
+      context: .
+      dockerfile: ./web_api/Dockerfile # Adjust this path to your API folder
+    container_name: finance-api
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=mysql;Database=${MYSQL_DATABASE};Uid=${MYSQL_USER};Pwd=${MYSQL_PASSWORD};
+    restart: unless-stopped
+
+  # 3. Flask UI (Refactored from your frontend compose)
+  flask-ui:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile # Path to your Flask Dockerfile
+      args:
+        REQUIREMENTS: requirements.txt
+    container_name: finance-ui
+    ports:
+      - "${HOST_PORT:-5000}:5000" # Map host port to 5000
+    depends_on:
+      - web-api
+    env_file:
+      - .env
+    environment:
+      - FLASK_ENV=production
+      - API_URL=http://web-api:8080
+      # Entra ID variables from your .env
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - TENANT_ID=${TENANT_ID}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   finance_data:

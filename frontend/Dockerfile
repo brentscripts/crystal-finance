@@ -1,30 +1,30 @@
-# Use official Python image
+# 1. Use a slightly more robust base for cryptography/msal
+FROM python:3.12-alpine
 
-FROM python:3.13.7-alpine3.21
+# 2. Install system dependencies needed for msal/cryptography
+RUN apk add --no-cache gcc musl-dev libffi-dev
 
 WORKDIR /app
 
-# Allow switching requirements file via build arg
+# 3. Handle requirements
 ARG REQUIREMENTS=requirements.txt
-COPY requirements.txt requirements-dev.txt ./
-
-# Select requirements file via build arg (default: requirements.txt)
-ARG REQUIREMENTS=requirements.txt
+# Copy requirements from the root or frontend folder
+COPY frontend/requirements*.txt ./
 RUN pip install --no-cache-dir -r $REQUIREMENTS
 
-# Copy only necessary files
-COPY webapp/ webapp/
-COPY database/ database/
-COPY importers/ importers/
-COPY main.py init_db.py schema.sql ./
-COPY webapp/templates/ webapp/templates/
-COPY webapp/static/ webapp/static/
+# 4. Copy your Flask app files
+# We use 'frontend/' prefix because the build context is the repository root
+COPY frontend/webapp/ webapp/
+COPY frontend/importers/ importers/
+COPY frontend/main.py frontend/init_db.py frontend/schema.sql ./
 
-# Set environment variables
+# 5. Set environment variables
 ENV FLASK_APP=webapp/app.py
-ENV FLASK_ENV=production
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV PYTHONUNBUFFERED=1
 
 EXPOSE 5000
 
-# Use Gunicorn for production
+# 6. Production Server
+# Ensure your app object is named 'app' inside webapp/app.py
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "webapp.app:app"]
