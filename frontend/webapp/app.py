@@ -48,7 +48,7 @@ AUTHORITY = os.environ.get('AUTHORITY')
 
 REDIRECT_URI = os.environ.get(
     'REDIRECT_URI',
-    'http://localhost:5000/getAToken'
+    'http://localhost:8000/getAToken'
 )
 API_SCOPE = os.environ.get('API_SCOPE', f'{CLIENT_ID}/.default')
 
@@ -419,29 +419,64 @@ def logout():
 # ============================================================================
 
 
+def _render_transactions(page=1, per_page=20, sort='date', order='asc', filter_desc='', filter_cat='', filter_source=''):
+    """
+    Load transactions from the Web API and render the main transactions page.
+    """
+    result = call_api(
+        'GET',
+        '/api/transactions',
+        params={'page': page, 'pageSize': per_page}
+    )
+
+    if not result.get('success'):
+        return render_template(
+            'error.html',
+            title="Error Loading Transactions",
+            message=result.get('message', 'Unable to load transactions.')
+        ), 500
+
+    transactions_data = result.get('data', {})
+    return render_template(
+        'index.html',
+        transactions=transactions_data.get('items', []),
+        page=page,
+        per_page=per_page,
+        total=transactions_data.get('total', 0),
+        sort=sort,
+        order=order,
+        filter_desc=filter_desc,
+        filter_cat=filter_cat,
+        filter_source=filter_source,
+        user=session.get('user'),
+        csrf_token=generate_csrf()
+    )
+
+
 @app.route("/")
 def index():
     """
-    Public home page (no authentication required).
-    
-    Redirects authenticated users to /access dashboard.
+    Home page.
+
+    If logged in, display transactions directly. Otherwise redirect to login.
     """
-    if session.get("user"):
-        return redirect(url_for("access"))
-    return render_template("index.html")
+    if not session.get("user"):
+        return redirect(url_for("login"))
+
+    return transactions()
 
 
 @app.route("/access")
 def access():
     """
     Authenticated user dashboard (requires login).
-    
+
     Displays user profile and navigation to app features.
     Redirects to login if not authenticated.
     """
     if not session.get("user"):
         return redirect(url_for("login"))
-    
+
     user = session.get("user")
     return render_template("access.html", user=user)
 
@@ -450,42 +485,29 @@ def access():
 def transactions():
     """
     Display list of transactions from Web API.
-    
-    Retrieves paginated transaction list from backend API.
     """
     if not session.get("user"):
         return redirect(url_for("login"))
-    
+
     try:
-        # Get pagination parameters
         page = max(int(request.args.get('page', 1)), 1)
         per_page = min(max(int(request.args.get('per_page', 20)), 1), 100)
-        
-        # Call API to get transactions
-        result = call_api(
-            'GET',
-            '/api/transactions',
-            params={'page': page, 'pageSize': per_page}
-        )
-        
-        if not result.get('success'):
-            return render_template(
-                'error.html',
-                title="Error Loading Transactions",
-                message=result.get('message', 'Unable to load transactions.')
-            ), 500
-        
-        transactions_data = result.get('data', {})
-        
-        return render_template(
-            'dashboard.html',
-            transactions=transactions_data.get('items', []),
+        sort = request.args.get('sort', 'date')
+        order = request.args.get('order', 'asc')
+        filter_desc = request.args.get('filter_desc', '')
+        filter_cat = request.args.get('filter_cat', '')
+        filter_source = request.args.get('filter_source', '')
+
+        return _render_transactions(
             page=page,
             per_page=per_page,
-            total=transactions_data.get('total', 0),
-            user=session.get('user')
+            sort=sort,
+            order=order,
+            filter_desc=filter_desc,
+            filter_cat=filter_cat,
+            filter_source=filter_source,
         )
-    
+
     except Exception as e:
         app.logger.error(f"Transactions route error: {e}", exc_info=True)
         return render_template(

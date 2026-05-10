@@ -9,13 +9,13 @@ class TestAppRoutes(unittest.TestCase):
 
     def test_index_route(self):
         response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Transactions', response.data)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/login', response.headers.get('Location', ''))
 
     def test_dashboard_route(self):
         response = self.client.get('/dashboard')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Dashboard', response.data)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/login', response.headers.get('Location', ''))
 
     def test_add_route_get(self):
         response = self.client.get('/add')

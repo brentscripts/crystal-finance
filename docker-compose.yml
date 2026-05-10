@@ -1,67 +1,169 @@
-version: '3.8'
+# ============================================================================
+# Crystal Finance - Three-Tier Microservice Architecture
+# ============================================================================
+# Services: MySQL Database → C# Web API → Flask Frontend
+# All services are on the 'finance-network' bridge network
+# Environment variables are loaded from .env file in the repository root
+# ============================================================================
 
 services:
- # 1. MySQL Database
+
+  # ============================================================================
+  # 1. MYSQL DATABASE SERVICE
+  # ============================================================================
   mysql:
     image: mysql:8
     container_name: finance-mysql
+    
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    
     ports:
-      - "${HOST_PORT}:3306"             # Expose container MySQL on host
+      - "${MYSQL_HOST_PORT:-3306}:3306"
+    
     volumes:
-      - finance_data:/var/lib/mysql     # Persistent storage
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql  # Optional schema
+      - finance_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    
+    networks:
+      - finance-network
+    
     restart: unless-stopped
+    
     healthcheck:
       test: ["CMD-SHELL", "mysql -h 127.0.0.1 -u root -p$MYSQL_ROOT_PASSWORD -e 'SELECT 1' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # 2. C# Web API
+
+  # ============================================================================
+  # 2. C# WEB API SERVICE
+  # ============================================================================
   web-api:
     build:
       context: .
-      dockerfile: ./web_api/Dockerfile # Adjust this path to your API folder
+      dockerfile: ./src/CrystalFinance.Api/Dockerfile
+    
     container_name: finance-api
+    
     depends_on:
       mysql:
         condition: service_healthy
+    
     environment:
-      - ConnectionStrings__DefaultConnection=Server=mysql;Database=${MYSQL_DATABASE};Uid=${MYSQL_USER};Pwd=${MYSQL_PASSWORD};
-    restart: unless-stopped
+       # Azure Entra ID / MSAL Authentication
+      - AzureAd__Instance=${AZURE_AD_INSTANCE}
+      - AzureAd__TenantId=${AZURE_AD_TENANT_ID}
+      - AzureAd__ClientId=${AZURE_AD_CLIENT_ID}
+      - AzureAd__ClientSecret=${AZURE_AD_CLIENT_SECRET}
+      - AzureAd__Scopes=${AZURE_AD_SCOPES}
+      - AzureAd__AuthorizationUrl=${AZURE_AD_AUTHORIZATION_URL}
+      - AzureAd__TokenUrl=${AZURE_AD_TOKEN_URL}
+      - AzureAd__AuthorityUrl=${AZURE_AD_AUTHORITY_URL}
+      - AzureAd__ApplicationIdUri=${AZURE_AD_APPLICATION_ID_URI}
 
-  # 3. Flask UI (Refactored from your frontend compose)
+      # Connection string to MySQL database
+      - ConnectionStrings__DefaultConnection=Server=mysql;Database=${MYSQL_DATABASE};Uid=${MYSQL_USER};Pwd=${MYSQL_PASSWORD};
+      
+      # ASP.NET Core configuration
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+    
+    ports:
+      - "${API_HOST_PORT:-8080}:8080"
+    
+    networks:
+      - finance-network
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+
+
+  # ============================================================================
+  # 3. FLASK FRONTEND SERVICE
+  # ============================================================================
   flask-ui:
     build:
       context: .
-      dockerfile: ./frontend/Dockerfile # Path to your Flask Dockerfile
+      dockerfile: ./frontend/Dockerfile
       args:
         REQUIREMENTS: requirements.txt
+    
     container_name: finance-ui
-    ports:
-      - "${HOST_PORT:-5000}:5000" # Map host port to 5000
+    
     depends_on:
-      - web-api
+      web-api:
+        condition: service_healthy
+    
+    # Load all variables from .env as base, then override/supplement with explicit environment vars
     env_file:
       - .env
+    
     environment:
-      - FLASK_ENV=production
-      - API_URL=http://web-api:8080
-      # Entra ID variables from your .env
-      - CLIENT_ID=${CLIENT_ID}
-      - CLIENT_SECRET=${CLIENT_SECRET}
-      - TENANT_ID=${TENANT_ID}
+      # Flask application configuration
+      FLASK_ENV: production
+      FLASK_DEBUG: "True"
+      
+      # Internal Docker network URL for C# API communication
+      API_BASE_URL: http://web-api:8080
+      API_TIMEOUT: ${API_TIMEOUT}
+      
+      # Flask security
+      SECRET_KEY: ${SECRET_KEY}
+      
+      # Azure Entra ID / MSAL Authentication
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      AZURE_TENANT: ${AZURE_TENANT}
+      AUTHORITY: ${AUTHORITY}
+      REDIRECT_URI: ${REDIRECT_URI}
+      API_SCOPE: ${API_SCOPE}
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL}
+    
+    ports:
+      - "${UI_HOST_PORT:-5000}:5000"
+    
+    networks:
+      - finance-network
+
+    volumes:
+      - ./frontend/webapp:/app/webapp
+    
+    command: ["gunicorn", "--workers=1", "--reload", "--bind", "0.0.0.0:5000", "webapp.app:app"]
+    
     restart: unless-stopped
+    
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      test: ["CMD-SHELL", "curl -f http://localhost:5000 || exit 1"]
       interval: 30s
       timeout: 10s
+      start_period: 40s
       retries: 3
 
+
+# ============================================================================
+# VOLUMES
+# ============================================================================
 volumes:
   finance_data:
+    driver: local
+
+
+# ============================================================================
+# NETWORKS
+# ============================================================================
+networks:
+  finance-network:
+    driver: bridge

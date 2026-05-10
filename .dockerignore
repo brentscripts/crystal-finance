@@ -3,14 +3,13 @@
 
 # 2. Allow your service folders (The "Assets" will be included automatically)
 !frontend/
-!CrystalFinance.Api/
-!CrystalFinanceLibrary/
-!mysql_folder/
+!src/
+!mysql/
 
 # 3. Allow global build files
 !docker-compose.yml
-!requirements.txt
 !.env
+!.env.example
 
 # 4. Re-ignore the "junk" inside those folders
 **/__pycache__/
@@ -20,3 +19,7 @@
 **/obj/
 **/venv/
 **/.vscode/
+**/.vs/
+**/.git/
+**/.github/
+**/node_modules/

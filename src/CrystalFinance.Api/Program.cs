@@ -7,7 +7,7 @@ SqlMapper.AddTypeMap(typeof(TranSourceType), DbType.String);
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.AddDependencies();
@@ -32,12 +32,12 @@ app.MapControllers();
 
 // Health check endpoints
 app.MapHealthChecks("/health");                          // Overall health
-app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions 
-{ 
+app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
     Predicate = check => check.Tags.Contains("live")     // Liveness probe (K8s)
 });
-app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions 
-{ 
+app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
     Predicate = check => check.Tags.Contains("ready")    // Readiness probe (K8s) 
 });
 
