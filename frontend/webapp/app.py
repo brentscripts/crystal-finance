@@ -277,30 +277,37 @@ def call_api(method, endpoint, data=None, params=None, files=None):
 @app.route("/login")
 def login():
     """
-    Initiate OAuth2 login flow with Azure Entra ID.
-    
-    Redirects to Azure Entra ID login page if not already authenticated.
-    Stores state parameter in session for CSRF protection.
+    Display the login page for unauthenticated users.
     """
     if session.get("user"):
         return redirect(url_for("access"))
-    
+
+    return render_template("login.html", title="Login")
+
+
+@app.route("/authorize")
+def authorize():
+    """
+    Initiate OAuth2 login flow with Azure Entra ID.
+    """
+    if session.get("user"):
+        return redirect(url_for("access"))
+
     try:
         cca = _build_msal_app()
-        
-        # Generate state for CSRF protection
+
         state = str(uuid.uuid4())
         session["oauth_state"] = state
-        
+
         auth_url = cca.get_authorization_request_url(
             scopes=API_SCOPE,
             redirect_uri=REDIRECT_URI,
             state=state
         )
-        
+
         app.logger.info("User initiated login")
         return redirect(auth_url)
-    
+
     except ValueError as e:
         app.logger.error(f"Login configuration error: {e}")
         return render_template(
@@ -726,9 +733,12 @@ def donations_vs_income():
 
 
 @app.context_processor
-def inject_csrf_token():
-    """Inject CSRF token into all templates."""
-    return dict(csrf_token=generate_csrf())
+def inject_global_template_values():
+    """Inject global template values into all templates."""
+    return dict(
+        csrf_token=generate_csrf(),
+        user=session.get('user')
+    )
 
 
 @app.errorhandler(400)

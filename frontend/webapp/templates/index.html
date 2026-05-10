@@ -1,107 +1,143 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Transactions</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <meta name="csrf-token" content="{{ csrf_token }}">
-</head>
-<body>
+{% extends "base.html" %} {% block title %}Transactions - Crystal Finance{%
+endblock %} {% block head %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='transactions.css') }}"
+/>
+{% endblock %} {% block nav_items %}
+<a href="{{ url_for('access') }}" class="nav-link">Dashboard</a>
+<a href="{{ url_for('transactions') }}" class="nav-link">Transactions</a>
+<a href="{{ url_for('add') }}" class="nav-link">Add Transaction</a>
+<a href="{{ url_for('dashboard') }}" class="nav-link">Analytics</a>
+{% endblock %} {% block content %}
+<div class="container">
+  <div class="welcome-section">
     <h1>Transactions</h1>
 
-    <div class="top-bar">
-        <a href="{{ url_for('add') }}">➕ Add New Transaction</a>
+    <div class="action-buttons">
+      <a href="{{ url_for('add') }}" class="btn">➕ Add New Transaction</a>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary"
+        >📊 Go to Dashboard</a
+      >
     </div>
+  </div>
 
-    <div class="top-bar">
-    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">📊 Go to Dashboard</a>
-    </div>
+  <!-- Filter form (GET - no CSRF needed) -->
+  <form method="get" class="filter-form">
+    <input
+      type="text"
+      name="filter_desc"
+      placeholder="Filter by Description"
+      value="{{ filter_desc }}"
+      maxlength="200"
+    />
+    <input
+      type="text"
+      name="filter_cat"
+      placeholder="Filter by Category"
+      value="{{ filter_cat }}"
+      maxlength="100"
+    />
+    <input
+      type="text"
+      name="filter_source"
+      placeholder="Filter by Source"
+      value="{{ filter_source }}"
+      maxlength="50"
+    />
+    <button type="submit" class="btn">Filter</button>
+  </form>
 
-    <!-- Filter form (GET - no CSRF needed) -->
-    <form method="get" class="filter-form">
-        <input type="text" name="filter_desc" placeholder="Filter by Description" value="{{ filter_desc }}" maxlength="200">
-        <input type="text" name="filter_cat" placeholder="Filter by Category" value="{{ filter_cat }}" maxlength="100">
-        <input type="text" name="filter_source" placeholder="Filter by Source" value="{{ filter_source }}" maxlength="50">
-        <button type="submit">Filter</button>
-    </form>
+  <table class="transactions-table">
+    <thead>
+      <tr>
+        {% for col, label in [('date', 'Date'), ('description', 'Description'),
+        ('category', 'Category'), ('amount', 'Amount'), ('source', 'Source')] %}
+        <th>
+          <a
+            href="?sort={{ col }}&order={% if sort == col and order == 'asc' %}desc{% else %}asc{% endif %}
+            {% if filter_desc %}&filter_desc={{ filter_desc }}{% endif %}
+            {% if filter_cat %}&filter_cat={{ filter_cat }}{% endif %}
+            {% if filter_source %}&filter_source={{ filter_source }}{% endif %}"
+          >
+            {{ label }} {% if sort == col %} {% if order == 'asc' %}▲{% else
+            %}▼{% endif %} {% endif %}
+          </a>
+        </th>
+        {% endfor %}
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for txn in transactions %}
+      <tr data-id="{{ txn['id'] }}">
+        <td class="td-date">{{ txn['date'] }}</td>
+        <td class="td-description">{{ txn['description'] }}</td>
+        <td class="td-category">{{ txn['category'] }}</td>
+        <td class="td-amount">{{ "{:.2f}".format(txn['amount']) }}</td>
+        <td class="td-source">{{ txn['source'] }}</td>
+        <td class="actions">
+          <button type="button" class="edit-btn">✏️ Edit</button>
+          <button type="button" class="save-btn hidden">💾 Save</button>
+          <form
+            action="{{ url_for('delete', id=txn['id']) }}"
+            method="post"
+            class="inline-form"
+          >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <button
+              type="submit"
+              onclick="return confirm('Delete this transaction?');"
+            >
+              🗑️ Delete
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6">No transactions found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-    <table>
-        <thead>
-            <tr>
-                {% for col, label in [('date', 'Date'), ('description', 'Description'), ('category', 'Category'), ('amount', 'Amount'), ('source', 'Source')] %}
-                <th>
-                    <a href="?sort={{ col }}&order={% if sort == col and order == 'asc' %}desc{% else %}asc{% endif %}
-                        {% if filter_desc %}&filter_desc={{ filter_desc }}{% endif %}
-                        {% if filter_cat %}&filter_cat={{ filter_cat }}{% endif %}
-                        {% if filter_source %}&filter_source={{ filter_source }}{% endif %}">
-                        {{ label }}
-                        {% if sort == col %}
-                            {% if order == 'asc' %}▲{% else %}▼{% endif %}
-                        {% endif %}
-                    </a>
-                </th>
-                {% endfor %}
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for txn in transactions %}
-            <tr data-id="{{ txn['id'] }}">
-                <td class="td-date">{{ txn['date'] }}</td>
-                <td class="td-description">{{ txn['description'] }}</td>
-                <td class="td-category">{{ txn['category'] }}</td>
-                <td class="td-amount">{{ "{:.2f}".format(txn['amount']) }}</td>
-                <td class="td-source">{{ txn['source'] }}</td>
-                <td class="actions">
-                    <button type="button" class="edit-btn">✏️ Edit</button>
-                    <button type="button" class="save-btn" style="display:none;">💾 Save</button>
-                    <form action="{{ url_for('delete', id=txn['id']) }}" method="post" style="display:inline;">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                        <button type="submit" onclick="return confirm('Delete this transaction?')">🗑️ Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="6">No transactions found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <!-- Pagination block -->
-    {% set total_pages = (total // per_page) + (1 if total % per_page else 0) %}
-{% if total_pages > 1 %}
-<div class="pagination-controls">
+  <!-- Pagination block -->
+  {% set total_pages = (total // per_page) + (1 if total % per_page else 0) %}
+  {% if total_pages > 1 %}
+  <div class="pagination-controls">
     {% if page > 1 %}
-        <a href="?page={{ page - 1 }}&per_page={{ per_page }}&sort={{ sort }}&order={{ order }}
-            {% if filter_desc %}&filter_desc={{ filter_desc }}{% endif %}
-            {% if filter_cat %}&filter_cat={{ filter_cat }}{% endif %}
-            {% if filter_source %}&filter_source={{ filter_source }}{% endif %}">« Prev</a>
-    {% endif %}
-
-    {% for p in range(1, total_pages + 1) %}
-        {% if p == page %}
-            <strong>{{ p }}</strong>
-        {% else %}
-            <a href="?page={{ p }}&per_page={{ per_page }}&sort={{ sort }}&order={{ order }}
-                {% if filter_desc %}&filter_desc={{ filter_desc }}{% endif %}
-                {% if filter_cat %}&filter_cat={{ filter_cat }}{% endif %}
-                {% if filter_source %}&filter_source={{ filter_source }}{% endif %}">{{ p }}</a>
-        {% endif %}
-    {% endfor %}
-
-    {% if page < total_pages %}
-        <a href="?page={{ page + 1 }}&per_page={{ per_page }}&sort={{ sort }}&order={{ order }}
-            {% if filter_desc %}&filter_desc={{ filter_desc }}{% endif %}
-            {% if filter_cat %}&filter_cat={{ filter_cat }}{% endif %}
-            {% if filter_source %}&filter_source={{ filter_source }}{% endif %}">Next »</a>
+    <a
+      href="?page={{ page - 1 }}&per_page={{ per_page }}&sort={{ sort }}&order={{ order }}
+        {% if filter_desc %}&filter_desc={{ filter_desc }}{% endif %}
+        {% if filter_cat %}&filter_cat={{ filter_cat }}{% endif %}
+        {% if filter_source %}&filter_source={{ filter_source }}{% endif %}"
+      >« Prev</a
+    >
+    {% endif %} {% for p in range(1, total_pages + 1) %} {% if p == page %}
+    <strong>{{ p }}</strong>
+    {% else %}
+    <a
+      href="?page={{ p }}&per_page={{ per_page }}&sort={{ sort }}&order={{ order }}
+          {% if filter_desc %}&filter_desc={{ filter_desc }}{% endif %}
+          {% if filter_cat %}&filter_cat={{ filter_cat }}{% endif %}
+          {% if filter_source %}&filter_source={{ filter_source }}{% endif %}"
+      >{{ p }}</a
+    >
+    {% endif %} {% endfor %} {% if page < total_pages %}
+    <a
+      href="?page={{ page + 1 }}&per_page={{ per_page }}&sort={{ sort }}&order={{ order }}
+        {% if filter_desc %}&filter_desc={{ filter_desc }}{% endif %}
+        {% if filter_cat %}&filter_cat={{ filter_cat }}{% endif %}
+        {% if filter_source %}&filter_source={{ filter_source }}{% endif %}"
+      >Next »</a
+    >
     {% endif %}
 
     <span class="total-count">Total: {{ total }}</span>
+  </div>
+  {% endif %}
 </div>
-{% endif %}
 
-    <script src="{{ url_for('static', filename='editTable.js') }}"></script>
-</body>
-</html>
+<script src="{{ url_for('static', filename='editTable.js') }}"></script>
+{% endblock %}

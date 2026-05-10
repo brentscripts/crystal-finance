@@ -1,42 +1,50 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Finance Dashboard</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='/style.css') }}"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  </head>
-  <body>
-    <a href="{{ url_for('index') }}">← Back to Transactions</a>
+{% extends "base.html" %} {% block title %}Analytics Dashboard - Crystal
+Finance{% endblock %} {% block head %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='dashboard.css') }}"
+/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %} {% block nav_items %}
+<a href="{{ url_for('access') }}" class="nav-link">Dashboard</a>
+<a href="{{ url_for('transactions') }}" class="nav-link">Transactions</a>
+<a href="{{ url_for('add') }}" class="nav-link">Add Transaction</a>
+<a href="{{ url_for('dashboard') }}" class="nav-link">Analytics</a>
+{% endblock %} {% block content %}
+<div class="container">
+  <div class="dashboard-container">
+    <h1>Finance Analytics Dashboard</h1>
 
-    <div class="dashboard-container">
-      <h1>Finance Dashboard</h1>
-
-      <div class="dashboard-section">
-        <h2>Expenses by Category</h2>
-        <canvas id="expensesChart" width="400" height="400"></canvas>
+    <div class="dashboard-section">
+      <h2>Expenses by Category</h2>
+      <div class="chart-container">
+        <canvas id="expensesChart"></canvas>
       </div>
-
-      <div class="dashboard-section">
-        <h2>Monthly Cash Flow</h2>
-        <canvas id="monthlyCashFlowChart" width="600" height="400"></canvas>
-      </div>
-
-      <div class="dashboard-section">
-        <h2>Income vs Expenses</h2>
-        <canvas id="incomeVsExpensesChart" width="400" height="400"></canvas>
-      </div>
-
-      <div class="dashboard-section">
-        <h2>Donations & Giving vs Income</h2>
-        <canvas id="donationsVsIncomeChart" width="400" height="400"></canvas>
-      </div>
-
-      <!-- Future visualizations -->
     </div>
-    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
-  </body>
-</html>
+
+    <div class="dashboard-section">
+      <h2>Monthly Cash Flow</h2>
+      <div class="chart-container">
+        <canvas id="monthlyCashFlowChart"></canvas>
+      </div>
+    </div>
+
+    <div class="dashboard-section">
+      <h2>Income vs Expenses</h2>
+      <div class="chart-container">
+        <canvas id="incomeVsExpensesChart"></canvas>
+      </div>
+    </div>
+
+    <div class="dashboard-section">
+      <h2>Donations & Giving vs Income</h2>
+      <div class="chart-container">
+        <canvas id="donationsVsIncomeChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Future visualizations -->
+  </div>
+</div>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% endblock %}

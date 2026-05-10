@@ -1,198 +1,46 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Crystal Finance</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+{% extends "base.html" %} {% block head %} {{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}" />
+{% endblock %} {% block navigation %}
+<!-- No navigation for login page -->
+{% endblock %} {% block content %}
+<div class="login-container">
+  <div class="logo">💰 Crystal Finance</div>
+  <div class="subtitle">Financial Management Platform</div>
 
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-          "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-          sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 20px;
-      }
+  <h1 class="login-title">Secure Login</h1>
 
-      .login-container {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 400px;
-        padding: 40px;
-        text-align: center;
-      }
+  <p class="login-description">
+    Access your financial dashboard securely with your work or school account.
+    Crystal Finance uses Azure Entra ID for enterprise-grade authentication.
+  </p>
 
-      .logo {
-        font-size: 32px;
-        font-weight: bold;
-        color: #667eea;
-        margin-bottom: 10px;
-      }
+  <a href="{{ url_for('authorize') }}" class="login-button">
+    <svg
+      class="microsoft-icon"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill="white"
+        d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z"
+      />
+    </svg>
+    Sign in with Microsoft
+  </a>
 
-      .subtitle {
-        color: #666;
-        margin-bottom: 30px;
-        font-size: 14px;
-      }
+  <div class="login-features">
+    <div class="features-title">Why Choose Crystal Finance?</div>
+    <ul class="features-list">
+      <li>Secure Azure Entra ID authentication</li>
+      <li>Automated transaction tracking</li>
+      <li>Real-time financial insights</li>
+      <li>Multi-account support</li>
+    </ul>
+  </div>
 
-      h1 {
-        font-size: 24px;
-        margin-bottom: 20px;
-        color: #333;
-      }
-
-      .description {
-        color: #666;
-        font-size: 14px;
-        line-height: 1.6;
-        margin-bottom: 30px;
-      }
-
-      .login-button {
-        display: inline-block;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 12px 40px;
-        border-radius: 5px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
-        width: 100%;
-        padding: 14px;
-      }
-
-      .login-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-      }
-
-      .login-button:active {
-        transform: translateY(0);
-      }
-
-      .microsoft-icon {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        margin-right: 8px;
-        vertical-align: middle;
-      }
-
-      .features {
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #eee;
-      }
-
-      .features-title {
-        font-size: 13px;
-        font-weight: 600;
-        color: #666;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .features-list {
-        list-style: none;
-        text-align: left;
-      }
-
-      .features-list li {
-        color: #666;
-        font-size: 13px;
-        margin-bottom: 8px;
-        padding-left: 20px;
-        position: relative;
-      }
-
-      .features-list li:before {
-        content: "✓";
-        position: absolute;
-        left: 0;
-        color: #667eea;
-        font-weight: bold;
-      }
-
-      .footer-text {
-        margin-top: 20px;
-        color: #999;
-        font-size: 12px;
-        line-height: 1.5;
-      }
-
-      .footer-text a {
-        color: #667eea;
-        text-decoration: none;
-      }
-
-      .footer-text a:hover {
-        text-decoration: underline;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="login-container">
-      <div class="logo">💰 Crystal Finance</div>
-      <div class="subtitle">Financial Management Platform</div>
-
-      <h1>Secure Login</h1>
-
-      <p class="description">
-        Access your financial dashboard securely with your work or school
-        account. Crystal Finance uses Azure Entra ID for enterprise-grade
-        authentication.
-      </p>
-
-      <a href="{{ url_for('login') }}" class="login-button">
-        <svg
-          class="microsoft-icon"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill="white"
-            d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z"
-          />
-        </svg>
-        Sign in with Microsoft
-      </a>
-
-      <div class="features">
-        <div class="features-title">Why Choose Crystal Finance?</div>
-        <ul class="features-list">
-          <li>Secure Azure Entra ID authentication</li>
-          <li>Automated transaction tracking</li>
-          <li>Real-time financial insights</li>
-          <li>Multi-account support</li>
-        </ul>
-      </div>
-
-      <div class="footer-text">
-        <p>
-          By logging in, you agree to our <a href="#privacy">Privacy Policy</a>
-        </p>
-        <p style="margin-top: 10px">
-          Need help? <a href="#support">Contact Support</a>
-        </p>
-      </div>
-    </div>
-  </body>
-</html>
+  <div class="footer-text">
+    <p>By logging in, you agree to our <a href="#privacy">Privacy Policy</a></p>
+    <p>Need help? <a href="#support">Contact Support</a></p>
+  </div>
+</div>
+{% endblock %}

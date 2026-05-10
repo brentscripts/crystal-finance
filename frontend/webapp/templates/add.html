@@ -1,70 +1,141 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Transaction</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <!-- Meta token for AJAX -->
-    <meta name="csrf-token" content="{{ csrf_token }}">
-</head>
-<body>
-    <h1>Add Transactions</h1>
-    <div class="add-forms-container">
+{% extends "base.html" %} {% block title %}Add Transaction - Crystal Finance{%
+endblock %} {% block head %} {{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='forms.css') }}" />
+{% endblock %} {% block nav_items %}
+<a href="{{ url_for('access') }}" class="nav-link">Dashboard</a>
+<a href="{{ url_for('transactions') }}" class="nav-link">Transactions</a>
+<a href="{{ url_for('add') }}" class="nav-link">Add Transaction</a>
+<a href="{{ url_for('dashboard') }}" class="nav-link">Analytics</a>
+{% endblock %} {% block content %}
+<div class="container">
+  <div class="form-container">
+    <div class="form-section">
+      <h2>Add Transactions</h2>
 
+      <div class="add-forms-container">
         <!-- Single Transaction -->
         <div class="add-form-single">
-            <h2>Single Transaction</h2>
-            <form method="post" novalidate>
-                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <h3>Single Transaction</h3>
+          <form method="post" novalidate>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
-                <label for="date">Date:</label>
-                <input type="date" id="date" name="date" required max="{{ today }}">
+            <div class="form-group">
+              <label for="date" class="form-label">Date:</label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                class="form-input"
+                required
+                max="{{ today }}"
+              />
+            </div>
 
-                <label for="description">Description:</label>
-                <input type="text" id="description" name="description" required maxlength="200" pattern="^[\\w\\s.,'-]+$">
+            <div class="form-group">
+              <label for="description" class="form-label">Description:</label>
+              <input
+                type="text"
+                id="description"
+                name="description"
+                class="form-input"
+                required
+                maxlength="200"
+                pattern="^[\\w\\s.,'-]+$"
+              />
+            </div>
 
-                <label for="category">Category:</label>
-                <input type="text" id="category" name="category" maxlength="100">
+            <div class="form-group">
+              <label for="category" class="form-label">Category:</label>
+              <input
+                type="text"
+                id="category"
+                name="category"
+                class="form-input"
+                maxlength="100"
+              />
+            </div>
 
-                <label for="amount">Amount:</label>
-                <input type="number" step="0.01" min="0" id="amount" name="amount" required>
+            <div class="form-group">
+              <label for="amount" class="form-label">Amount:</label>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                id="amount"
+                name="amount"
+                class="form-input"
+                required
+              />
+            </div>
 
-                <label for="source">Source:</label>
-                <select id="source" name="source" required>
-                    <option value="">-- Select --</option>
-                    <option value="bank">Bank</option>
-                    <option value="chase">Chase</option>
-                </select>
+            <div class="form-group">
+              <label for="source" class="form-label">Source:</label>
+              <select id="source" name="source" class="form-select" required>
+                <option value="">-- Select --</option>
+                <option value="bank">Bank</option>
+                <option value="chase">Chase</option>
+              </select>
+            </div>
 
-                <button type="submit">Add Transaction</button>
-            </form>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-form">
+                Add Transaction
+              </button>
+            </div>
+          </form>
         </div>
 
         <!-- Mass Upload -->
         <div class="add-form-mass">
-            <h2>Mass Upload via CSV</h2>
-            <form method="post" enctype="multipart/form-data" action="{{ url_for('add') }}" novalidate>
-                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                
-                <label for="file">CSV File:</label>
-                <input type="file" name="file" id="file" accept=".csv" required>
+          <h3>Mass Upload via CSV</h3>
+          <form
+            method="post"
+            enctype="multipart/form-data"
+            action="{{ url_for('add') }}"
+            novalidate
+          >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
-                <label for="source">Transaction Type:</label>
-                <select name="source" id="source" required>
-                    <option value="">-- Select --</option>
-                    <option value="bank">Bank</option>
-                    <option value="chase">Chase</option>
-                </select>
+            <div class="form-group">
+              <label for="file" class="form-label">CSV File:</label>
+              <div class="file-upload">
+                <input
+                  type="file"
+                  name="file"
+                  id="file"
+                  accept=".csv"
+                  required
+                />
+                <div class="file-upload-label">
+                  <span>Choose CSV file or drag and drop</span>
+                </div>
+              </div>
+            </div>
 
-                <button type="submit">Upload & Import</button>
-            </form>
+            <div class="form-group">
+              <label for="source" class="form-label">Transaction Type:</label>
+              <select name="source" id="source" class="form-select" required>
+                <option value="">-- Select --</option>
+                <option value="bank">Bank</option>
+                <option value="chase">Chase</option>
+              </select>
+            </div>
 
-            {% if message %}
-                <p><strong>{{ message }}</strong></p>
-            {% endif %}
+            <div class="form-actions">
+              <button type="submit" class="btn btn-form">
+                Upload & Import
+              </button>
+            </div>
+          </form>
+
+          {% if message %}
+          <div class="form-group">
+            <p class="error-message">{{ message }}</p>
+          </div>
+          {% endif %}
         </div>
+      </div>
     </div>
-
-    <br>
-    <a href="{{ url_for('index') }}">← Back to Transactions</a>
-</body>
-</html>
+  </div>
+</div>
+{% endblock %}

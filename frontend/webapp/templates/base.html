@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Crystal Finance{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    {% block navigation %}
+    <header class="header">
+      <div class="header-content">
+        <a href="{{ url_for('index') }}" class="logo">💰 Crystal Finance</a>
+
+        <nav class="nav-items">
+          {% block nav_items %}{% endblock %}
+
+          {% if user %}
+          <div class="user-menu">
+            <div class="user-info">
+              <div class="user-name">{{ user.name or 'User' }}</div>
+              <div class="user-email">{{ user.email }}</div>
+            </div>
+            <div class="avatar">{{ (user.name or 'U')[0].upper() }}</div>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+          </div>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
+    {% endblock %}
+
+    {% block content %}{% endblock %}
+  </body>
+</html></content>
+<parameter name="filePath">c:\Users\brent\GitHub\crystal-finance\frontend\webapp\templates\base.html
