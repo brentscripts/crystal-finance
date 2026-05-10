@@ -1,0 +1,25 @@
+# 1. Ignore everything
+*
+
+# 2. Allow your service folders (The "Assets" will be included automatically)
+!frontend/
+!src/
+!mysql/
+
+# 3. Allow global build files
+!docker-compose.yml
+!.env
+!.env.example
+
+# 4. Re-ignore the "junk" inside those folders
+**/__pycache__/
+**/*.db
+**/*.sqlite
+**/bin/
+**/obj/
+**/venv/
+**/.vscode/
+**/.vs/
+**/.git/
+**/.github/
+**/node_modules/

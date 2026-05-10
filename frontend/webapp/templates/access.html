@@ -1,0 +1,131 @@
+{% extends "base.html" %} {% block title %}Dashboard - Crystal Finance{%
+endblock %} {% block nav_items %}
+<a href="{{ url_for('access') }}" class="nav-link">Dashboard</a>
+<a href="{{ url_for('transactions') }}" class="nav-link">Transactions</a>
+<a href="{{ url_for('add') }}" class="nav-link">Add Transaction</a>
+<a href="{{ url_for('dashboard') }}" class="nav-link">Analytics</a>
+{% endblock %} {% block content %}
+<div class="container">
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+    <h1 class="welcome-title">Welcome back, {{ user.name or 'User' }}! 👋</h1>
+    <p class="welcome-subtitle">
+      Manage your finances efficiently with Crystal Finance. Access your
+      transactions, analyze spending patterns, and stay on top of your financial
+      goals.
+    </p>
+
+    <div class="action-buttons">
+      <a href="{{ url_for('add') }}" class="btn">
+        <span>➕</span>
+        Add Transaction
+      </a>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+        <span>📊</span>
+        View Analytics
+      </a>
+    </div>
+  </div>
+
+  <!-- Quick Action Cards -->
+  <div class="dashboard-grid">
+    <a href="{{ url_for('transactions') }}" class="card">
+      <div>
+        <div class="card-icon">💳</div>
+        <h3 class="card-title">Transactions</h3>
+        <p class="card-description">
+          View and manage all your financial transactions in one place.
+        </p>
+      </div>
+    </a>
+
+    <a href="{{ url_for('add') }}" class="card">
+      <div>
+        <div class="card-icon">➕</div>
+        <h3 class="card-title">Add Transaction</h3>
+        <p class="card-description">
+          Quickly record new transactions or import from CSV files.
+        </p>
+      </div>
+    </a>
+
+    <a href="{{ url_for('dashboard') }}" class="card">
+      <div>
+        <div class="card-icon">📈</div>
+        <h3 class="card-title">Analytics</h3>
+        <p class="card-description">
+          Visualize spending patterns and financial trends with charts.
+        </p>
+      </div>
+    </a>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features-section">
+    <h2>Key Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>🔐 Secure Authentication</h3>
+        <p>
+          Enterprise-grade security with Azure Entra ID (OAuth 2.0)
+          authentication.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>📊 Real-time Analytics</h3>
+        <p>
+          Monitor spending patterns, income vs. expenses, and financial trends
+          in real-time.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>📁 Bulk Import</h3>
+        <p>
+          Import transactions from CSV files from multiple sources (Bank, Chase,
+          etc.).
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>🔄 Automatic Sync</h3>
+        <p>
+          Seamlessly synced with MySQL database via REST API for reliable data
+          storage.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>📱 Responsive Design</h3>
+        <p>
+          Access your finances from any device - desktop, tablet, or mobile.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>⚡ Fast & Reliable</h3>
+        <p>
+          Built with ASP.NET Core and React for optimal performance and
+          scalability.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Getting Started Section -->
+  <div class="getting-started-section">
+    <h2>Getting Started</h2>
+    <ol>
+      <li>Add your first transaction using the "Add Transaction" button</li>
+      <li>Organize transactions by category for better tracking</li>
+      <li>Review your analytics to understand spending patterns</li>
+      <li>Set financial goals and monitor progress</li>
+    </ol>
+    <p>
+      Learn more in our
+      <a href="#docs">documentation</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

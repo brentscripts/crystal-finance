@@ -1,0 +1,52 @@
+# === Python bytecode ===
+__pycache__/
+*.py[cod]
+*$py.class
+
+# === Virtual environments ===
+env/
+venv/
+.venv/
+
+# === SQLite database ===
+*.db
+
+# === Log and runtime files ===
+*.log
+*.tmp
+*.bak
+
+# === MacOS system files ===""
+.DS_Store
+
+# === VS Code settings (optional) ===
+.vscode/
+
+# === Jupyter notebooks checkpoints ===
+.ipynb_checkpoints/
+
+# === Environment variables ===
+.env
+
+# Ignore all CSV files in the project
+*.csv
+
+# === Compiled files or binaries ===
+*.so
+*.dll
+*.dylib
+*.exe
+
+# === Tests / Coverage ===
+.coverage
+htmlcov/
+coverage.xml
+
+# === PEP 582 local packages ===
+__pypackages__/
+
+# === PyInstaller build artifacts ===
+build/
+dist/
+*.spec
+

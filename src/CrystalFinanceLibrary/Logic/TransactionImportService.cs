@@ -3,12 +3,7 @@ using CrystalFinance.Ui.Enums;
 using CrystalFinanceLibrary.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrystalFinanceLibrary.Logic;
 

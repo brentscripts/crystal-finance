@@ -1,0 +1,50 @@
+{% extends "base.html" %} {% block title %}Analytics Dashboard - Crystal
+Finance{% endblock %} {% block head %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='dashboard.css') }}"
+/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %} {% block nav_items %}
+<a href="{{ url_for('access') }}" class="nav-link">Dashboard</a>
+<a href="{{ url_for('transactions') }}" class="nav-link">Transactions</a>
+<a href="{{ url_for('add') }}" class="nav-link">Add Transaction</a>
+<a href="{{ url_for('dashboard') }}" class="nav-link">Analytics</a>
+{% endblock %} {% block content %}
+<div class="container">
+  <div class="dashboard-container">
+    <h1>Finance Analytics Dashboard</h1>
+
+    <div class="dashboard-section">
+      <h2>Expenses by Category</h2>
+      <div class="chart-container">
+        <canvas id="expensesChart"></canvas>
+      </div>
+    </div>
+
+    <div class="dashboard-section">
+      <h2>Monthly Cash Flow</h2>
+      <div class="chart-container">
+        <canvas id="monthlyCashFlowChart"></canvas>
+      </div>
+    </div>
+
+    <div class="dashboard-section">
+      <h2>Income vs Expenses</h2>
+      <div class="chart-container">
+        <canvas id="incomeVsExpensesChart"></canvas>
+      </div>
+    </div>
+
+    <div class="dashboard-section">
+      <h2>Donations & Giving vs Income</h2>
+      <div class="chart-container">
+        <canvas id="donationsVsIncomeChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Future visualizations -->
+  </div>
+</div>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% endblock %}
