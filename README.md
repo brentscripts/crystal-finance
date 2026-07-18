@@ -4,7 +4,7 @@ Crystal Finance is a personal finance application for tracking transactions, imp
 
 The app is built as a C# solution with:
 
-- a Blazor UI for the web experience
+- a Blazor UI for the web experience (Under Construction)
 - an ASP.NET Core API for business logic and endpoints
 - a MySQL database for storing transaction data
 
