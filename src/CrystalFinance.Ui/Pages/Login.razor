@@ -6,34 +6,29 @@
 @attribute [AllowAnonymous]
 
 @* The Overlay dims the background and blocks all mouse events *@
-<MudOverlay Visible="true"
-            DarkBackground="true"
-            AutoClose="false"
-            ZIndex="9999"
-            Class="d-flex align-center justify-center"
-            LockScroll="true">
-    
-    <MudPaper Elevation="25"
-              Class="pa-8 d-flex flex-column align-center"
-              Style="width: 400px; border-radius: 16px;">
-        
-        <MudIcon Icon="@Icons.Material.Filled.Lock" Color="Color.Primary" Size="Size.Large" Class="mb-4" />
-        
-        <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">Secure Access</MudText>
-        <MudText Typo="Typo.body1" Align="Align.Center" Class="mb-8">
-            Please sign in to continue to the application.
-        </MudText>
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5); z-index: 9999; backdrop-filter: blur(2px);" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+        <div class="modal-content shadow border-0 p-4 align-items-center" style="border-radius: 16px;">
 
-        <MudButton Variant="Variant.Filled"
-                   Color="Color.Primary"
-                   Size="Size.Large"
-                   FullWidth="true"
-                   OnClick="BeginLogin"
-                   StartIcon="@Icons.Material.Filled.Login">
-            Sign In
-        </MudButton>
-    </MudPaper>
-</MudOverlay>
+            @* Icon replacement using Bootstrap Icons *@
+            <i class="bi bi-lock-fill text-primary mb-3" style="font-size: 3rem;"></i>
+
+            <h2 class="h4 text-center mb-2">Secure Access</h2>
+
+            <p class="text-muted text-center mb-4">
+                Please sign in to continue to the application.
+            </p>
+
+            @* Standard HTML button with Blazor event handling *@
+            <button type="button" class="btn btn-primary btn-lg w-100 d-flex align-items-center justify-center gap-2" @onclick="BeginLogin">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Sign In
+            </button>
+
+        </div>
+    </div>
+</div>
+
 
 @code {
     protected override async Task OnInitializedAsync()

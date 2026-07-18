@@ -6,16 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>c74bbca9-aad9-4f54-96b1-84af72a31dc6</UserSecretsId>
   </PropertyGroup>
+	
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="4.3.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.15.0" />
-    <PackageReference Include="Microsoft.OpenApi" Version="2.6.1" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.12.18" />
-    <PackageReference Include="Scalar.AspNetCore.Microsoft" Version="2.12.18" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="4.13.2" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.19.2" />
+    <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.16.15" />
+    <PackageReference Include="Scalar.AspNetCore.Microsoft" Version="2.16.15" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.2" />
   </ItemGroup>
 
   <ItemGroup>

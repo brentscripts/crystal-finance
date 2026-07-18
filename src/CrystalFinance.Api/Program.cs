@@ -31,7 +31,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Health check endpoints
-app.MapHealthChecks("/health");                          // Overall health
+app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("live")     // Only liveness, not readiness
+});                         
 app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
 {
     Predicate = check => check.Tags.Contains("live")     // Liveness probe (K8s)
