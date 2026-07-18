@@ -12,29 +12,29 @@ public class HealthCheckTests : IAsyncLifetime
     private WebApplicationFactory<Program> _factory = null!;
     private HttpClient _client = null!;
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         _factory = new WebApplicationFactory<Program>();
         _client = _factory.CreateClient();
-        await Task.CompletedTask;
+        await ValueTask.CompletedTask;
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        _client?.Dispose();
-        _factory?.Dispose();
-        await Task.CompletedTask;
+        GC.SuppressFinalize(this);
+
+        await ValueTask.CompletedTask;
     }
 
     [Fact]
     public async Task HealthOverall_ReturnsOk()
     {
         // Act
-        var response = await _client.GetAsync("/health");
+        var response = await _client.GetAsync("/health", TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         Assert.Contains("Healthy", content);
     }
 
@@ -42,11 +42,11 @@ public class HealthCheckTests : IAsyncLifetime
     public async Task HealthLive_ReturnsOk()
     {
         // Act
-        var response = await _client.GetAsync("/health/live");
+        var response = await _client.GetAsync("/health/live", TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         Assert.Contains("Healthy", content);
     }
 
@@ -54,7 +54,7 @@ public class HealthCheckTests : IAsyncLifetime
     public async Task HealthReady_ReturnsOk()
     {
         // Act
-        var response = await _client.GetAsync("/health/ready");
+        var response = await _client.GetAsync("/health/ready", TestContext.Current.CancellationToken);
 
         // Assert
         // May return ServiceUnavailable if DB is unreachable, or OK if healthy
